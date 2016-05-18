@@ -18,21 +18,14 @@ int main(void)
 
     for (int i = 1; i <= 10; ++i) {
         int x = rand() % 1000;
-        std::cout << "Elementul " << x << " a fost inserat pe pozitia " << heap.insert(x) << '\n';
 
+        heap.insert(x);
         for (int j = 0; j < heap.size(); ++j) {
             std::cout << heap.getValue(j) << ' ';
         }
         std::cout << '\n';
     }
 
-    heap.update(2, 1);
-    for (int j = 0; j < heap.size(); ++j) {
-        std::cout << heap.getValue(j) << ' ';
-    }
-    std::cout << '\n';
-
-    heap.update(9, 1000);
     for (int j = 0; j < heap.size(); ++j) {
         std::cout << heap.getValue(j) << ' ';
     }

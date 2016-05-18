@@ -14,35 +14,19 @@ private:
     int parent(int pos);
     int leftSubtree(int pos);
     int rightSubtree(int pos);
-    int pushUp(int pos);
-    int pushDown(int pos);
+    void pushUp(int pos);
+    void pushDown(int pos);
 public:
     Heap(int capacity, int (*compare)(const T&, const T&));
     ~Heap();
 
     int size();
+    void insert(T x);
     T getValue(int pos);
-
-    // returneaza pozitia pe care se afla elementul in heap dupa ce a fost inserat
-    int insert(T x);
 
     T peek();
     T extractMax();
-
-    // updatez valoarea de pe pozitia pos (pastrand proprietatea de heap)
-    // si intoarece noua pozitie din heap
-    int update(int pos, T newData);
 };
-
-template <typename T>
-int Heap <T> :: update(int pos, T newData) {
-    H[pos] = newData;
-    if (pos > 1 && cmp(H[pos], H[parent(pos)])) {
-        return pushUp(pos);
-    } else {
-        return pushDown(pos);
-    }
-}
 
 template <typename T>
 T Heap <T> :: getValue(int pos) {
@@ -83,19 +67,17 @@ int Heap <T> :: rightSubtree(int pos) {
 }
 
 template <typename T>
-int Heap <T> :: pushUp(int pos) {
+void Heap <T> :: pushUp(int pos) {
     while ( pos > 0 && cmp(H[pos], H[parent(pos)]) ) {
         T aux = H[pos];
         H[pos] = H[parent(pos)];
         H[parent(pos)] = aux;
         pos = parent(pos);
     }
-
-    return pos;
 }
 
 template <typename T>
-int Heap <T> :: pushDown(int pos) {
+void Heap <T> :: pushDown(int pos) {
     while (1) {
         int rightSon = rightSubtree(pos);
         int leftSon = leftSubtree(pos);
@@ -124,19 +106,17 @@ int Heap <T> :: pushDown(int pos) {
             }
         }
     }
-
-    return pos;
 }
 
 template <typename T>
-int Heap <T> :: insert(T x) {
+void Heap <T> :: insert(T x) {
     if (capacity == dimension) {
         std::cerr << "Heapul e plin!\n";
-        return -1;
+        return;
     }
 
     H[dimension++] = x;
-    return pushUp(dimension - 1);
+    pushUp(dimension - 1);
 }
 
 template <typename T>
