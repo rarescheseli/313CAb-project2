@@ -47,6 +47,12 @@ Magazin<T>::Magazin() {
 	this->root = new AVLnode<T>();
 	this->distante = new Heap<double>(maxNr, cmp);
 	this->discount = new Heap<int>(maxNr, cmp);
+
+	this->zile = new zi[366];
+	for (int i = 1; i <= 365; i++) {
+		this->zile[i].nrVizite = 0;
+		this->zile[i].nrZi = i;
+	}
 }
 
 template<typename T>
@@ -57,6 +63,12 @@ Magazin<T>::Magazin(int storeId, double storeX, double storeY) {
 	this->root = new AVLnode<T>();
 	this->distante = new Heap<double>(maxNr, cmp);
 	this->discount = new Heap<int>(maxNr, cmp);
+
+	this->zile = new zi[366];
+	for (int i = 1; i <= 365; i++) {
+		this->zile[i].nrVizite = 0;
+		this->zile[i].nrZi = i;
+	}
 }
 
 template<typename T>
@@ -67,6 +79,11 @@ Magazin<T>::Magazin(const Magazin<T> &other) {
 	this->root = other->root;
 	this->distante = other->distante;
 	this->discount = other->discount;
+
+	for (int i = 1; i <= 365; i++) {
+		this->zile[i].nrVizite = other->zile[i].nrVizite;
+		this->zile[i].nrZi = other->zile[i].nrZi;
+	}
 }
 
 template<typename T>
