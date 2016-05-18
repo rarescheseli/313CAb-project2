@@ -25,6 +25,7 @@ class Magazin {
 public:
 	Magazin();
 	Magazin(int storeId, double storeX, double storeY);
+	Magazin(const Magazin<T> &other);
 	~Magazin();
 
 	int getId();
@@ -56,6 +57,16 @@ Magazin<T>::Magazin(int storeId, double storeX, double storeY) {
 	this->root = new AVLnode<T>();
 	this->distante = new Heap<double>(maxNr, cmp);
 	this->discount = new Heap<int>(maxNr, cmp);
+}
+
+template<typename T>
+Magazin<T>::Magazin(const Magazin<T> &other) {
+	this->storeId = other->getId();
+	this->storeX = other->getX();
+	this->storeY = other->storeY();
+	this->root = other->root;
+	this->distante = other->distante;
+	this->discount = other->discount;
 }
 
 template<typename T>
