@@ -51,6 +51,10 @@ int main(void)
     }
     std::cout << '\n';
 
-    heap.peek();
+    Heap < int > heap2 = heap;
+    for (int j = 0; j < heap.size(); ++j) {
+        std::cout << heap2.getValue(j) << ' ';
+    }
+    std::cout << '\n';
     return 0;
 }

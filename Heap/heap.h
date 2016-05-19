@@ -26,6 +26,22 @@ public:
     Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&));
     ~Heap();
 
+    // Copy constructor
+    Heap(const Heap &other) {
+        H = other.H;
+        cmp = other.cmp;
+        index = other.index;
+        capacity = other.capacity;
+        dimension = other.dimension;
+
+        position = new int[capacity];
+        if (dimension > 0) {
+            for (int i = 0; i < other.dimension; ++i) {
+                position[i] = other.position[i];
+            }
+        }
+    }
+
     int size();
     void insert(T x);
     T getValue(int pos);
