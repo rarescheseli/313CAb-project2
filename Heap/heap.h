@@ -1,23 +1,29 @@
 #pragma once
 
 #include <iostream>
+#include "pair.h"
+#include "resizablearray.h"
 
 template <typename T>
 class Heap {
 private:
-    T* H;
-    int dimension;
     int capacity;
 
+    // position[i] = pozitia din heap pe care se afla elementul inserat al i-lea in ordine cronologica
+    int *position;
+    int dimension, index;
+    ResizableArray < Pair < T, int > > H;
+
     // pointer la o functie care comparara doua elemente
-    int (*cmp)(const T&, const T&);
+    int (*cmp)(const Pair <T, int> &, const Pair <T, int>&);
     int parent(int pos);
     int leftSubtree(int pos);
     int rightSubtree(int pos);
     void pushUp(int pos);
     void pushDown(int pos);
+    void Swap(const int x, const int y);
 public:
-    Heap(int capacity, int (*compare)(const T&, const T&));
+    Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&));
     ~Heap();
 
     int size();
@@ -25,12 +31,32 @@ public:
     T getValue(int pos);
 
     T peek();
-    T extractMax();
+    T extract();
+
+    // updatez elementul care a fost inserat al k-lea in ordine cronologica
+    void update(int k, T newData);
 };
 
 template <typename T>
+void Heap <T> :: Swap(const int x, const int y) {
+    swap(H[x], H[y]);
+    swap(position[H[x].second], position[H[y].second]);
+}
+
+template <typename T>
+void Heap <T> :: update(int k, T newData) {
+    int pos = position[k - 1];
+    H[pos].first = newData;
+    if (pos > 1 && cmp(H[pos], H[parent(pos)])) {
+        return pushUp(pos);
+    } else {
+        return pushDown(pos);
+    }
+}
+
+template <typename T>
 T Heap <T> :: getValue(int pos) {
-    return H[pos];
+    return H[pos].first;
 }
 
 template <typename T>
@@ -39,16 +65,20 @@ int Heap <T> :: size() {
 }
 
 template <typename T>
-Heap <T> :: Heap(int capacity, int (*compare)(const T&, const T&)) {
+Heap <T> :: Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&)) {
+    index = 0;
     cmp = compare;
     dimension = 0;
-    H = new T[capacity];
+    /*Pair <T, int > aux;
+    aux.makePair(T(), -1);
+    H.push_back(aux);*/
     this->capacity = capacity;
+    position = new int[capacity];
 }
 
 template <typename T>
 Heap <T> :: ~Heap() {
-    delete[] H;
+    delete[] position;
 }
 
 template <typename T>
@@ -69,9 +99,14 @@ int Heap <T> :: rightSubtree(int pos) {
 template <typename T>
 void Heap <T> :: pushUp(int pos) {
     while ( pos > 0 && cmp(H[pos], H[parent(pos)]) ) {
-        T aux = H[pos];
+        /*Pair<T, int> aux = H[pos];
         H[pos] = H[parent(pos)];
         H[parent(pos)] = aux;
+
+        int aux2 = position[H[pos].second];
+        position[H[pos].second] = position[H[parent(pos)].second];
+        position[H[parent(pos)].second] = aux2;*/
+        Swap(pos, parent(pos));
         pos = parent(pos);
     }
 }
@@ -85,23 +120,40 @@ void Heap <T> :: pushDown(int pos) {
             if (leftSon > dimension) { // daca nu am fiu stanga
                 break;
             } else if ( cmp(H[leftSon], H[pos]) ) {
-                T aux = H[pos];
+                /*Pair <T, int> aux = H[pos];
                 H[pos] = H[leftSon];
                 H[leftSon] = aux;
+
+                int aux2 = position[H[pos].second];
+                position[H[pos].second] = position[H[leftSon].second];
+                position[H[leftSon].second] = aux2;*/
+
+                Swap(leftSon, pos);
                 pos = leftSon;
             } else {
                 break;
             }
         } else {
-            if (H[leftSon] <= H[rightSon] && cmp(H[leftSon], H[pos])) {
-                T aux = H[pos];
+            if (H[leftSon].first <= H[rightSon].first && cmp(H[leftSon], H[pos])) {
+                /*Pair <T, int> aux = H[pos];
                 H[pos] = H[leftSon];
                 H[leftSon] = aux;
+
+                int aux2 = position[H[pos].second];
+                position[H[pos].second] = position[H[leftSon].second];
+                position[H[leftSon].second] = aux2;*/
+                Swap(leftSon, pos);
                 pos = leftSon;
-            } else if (H[rightSon] <= H[leftSon] && cmp(H[rightSon], H[pos])) {
-                T aux = H[pos];
+            } else if (H[rightSon].first <= H[leftSon].first && cmp(H[rightSon], H[pos])) {
+                /*Pair <T, int> aux = H[pos];
                 H[pos] = H[rightSon];
                 H[rightSon] = aux;
+
+                int aux2 = position[H[pos].second];
+                position[H[pos].second] = position[H[rightSon].second];
+                position[H[rightSon].second] = aux2;*/
+
+                Swap(rightSon, pos);
                 pos = rightSon;
             }
         }
@@ -115,7 +167,10 @@ void Heap <T> :: insert(T x) {
         return;
     }
 
-    H[dimension++] = x;
+    position[index] = dimension++;
+    Pair <T, int> aux;
+    aux.makePair(x, index++);
+    H.push_back(aux);
     pushUp(dimension - 1);
 }
 
@@ -127,23 +182,31 @@ T Heap <T> :: peek() {
         return x;
     }
 
-    return H[0];
+    /*for (int i = 0; i < dimension; ++i) {
+        cout << i + 1 << ' ';
+    }cout << '\n';
+
+    for (int i = 0; i < dimension; ++i) {
+        cout << position[i] + 1 << ' ';
+    } cout << '\n';*/
+
+    return H[1].first;
 }
 
 template <typename T>
-T Heap <T> :: extractMax() {
-    if (dimension == 0) {
+T Heap <T> :: extract() {
+    if (dimension == 1) {
         std::cerr << "Heapul e gol! \n";
         T x;
         return x;
     }
 
-    T maxim = H[0];
-    H[0] = H[--dimension];
+    T value = H[1].first;
+    H[1] = H[--dimension];
 
-    if (dimension > 0) {
-        pushDown(0);
+    if (dimension > 1) {
+        pushDown(1);
     }
 
-    return maxim;
+    return value;
 }
