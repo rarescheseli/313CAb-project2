@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\fll0py\documents\visual studio 2015\projects\avl\avl\main.cpp(48): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  AVL.vcxproj -> C:\Users\fll0pY\Documents\Visual Studio 2015\Projects\AVL\Debug\AVL.exe
+  AVL.vcxproj -> C:\Users\fll0pY\Documents\Visual Studio 2015\Projects\AVL\Debug\AVL.pdb (Partial PDB)
