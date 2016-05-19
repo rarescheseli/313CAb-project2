@@ -14,20 +14,33 @@ private:
     int dimension, index;
     ResizableArray < Pair < T, int > > H;
 
-    // pointer la o functie care comparara doua elemente
-    int (*cmp)(const Pair <T, int> &, const Pair <T, int>&);
     int parent(int pos);
-    int leftSubtree(int pos);
-    int rightSubtree(int pos);
     void pushUp(int pos);
     void pushDown(int pos);
+    int leftSubtree(int pos);
+    int rightSubtree(int pos);
     void Swap(const int x, const int y);
+    // pointer la o functie care comparara doua elemente
+    int (*cmp)(const Pair <T, int> &, const Pair <T, int>&);
 public:
     Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&));
     ~Heap();
 
     // Copy constructor
-    Heap(const Heap &other) {
+    Heap(const Heap &other);
+
+    T peek();
+    int size();
+    T extract();
+    void insert(T x);
+    T getValue(int pos);
+
+    // updatez elementul care a fost inserat al k-lea in ordine cronologica
+    void update(int k, T newData);
+};
+
+template < typename T >
+Heap <T> :: Heap(const Heap &other) {
         H = other.H;
         cmp = other.cmp;
         index = other.index;
@@ -41,17 +54,6 @@ public:
             }
         }
     }
-
-    int size();
-    void insert(T x);
-    T getValue(int pos);
-
-    T peek();
-    T extract();
-
-    // updatez elementul care a fost inserat al k-lea in ordine cronologica
-    void update(int k, T newData);
-};
 
 template <typename T>
 void Heap <T> :: Swap(const int x, const int y) {
