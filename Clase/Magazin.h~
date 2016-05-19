@@ -134,13 +134,15 @@ void Magazin<T>::quickSort(zi vector[365], int pinitial, int pfinal) {
 	int j = pfinal;
 	zi pivot = vector[m];
 
-	while (i <= j) {
+	while (i <= j)
+	{
 		while (vector[i].nrVizite<pivot.nrVizite)
 			i++;
 		while (pivot.nrVizite<vector[j].nrVizite)
 			j--;
 
-		if (i <= j) {
+		if (i <= j)
+		{
 			zi temp = vector[i];
 			vector[i] = vector[j];
 			vector[j] = temp;
@@ -148,10 +150,12 @@ void Magazin<T>::quickSort(zi vector[365], int pinitial, int pfinal) {
 			j--;
 		}
 	}
-	if (pinitial<j) {
+	if (pinitial<j)
+	{
 		quicksort(vector, pinitial, j);
 	}
-	if (i<pfinal) {
+	if (i<pfinal)
+	{
 		quicksort(vector, i, pfinal);
 	}
 }
