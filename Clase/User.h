@@ -17,6 +17,12 @@ class User {
 		
 		~User();
 		
+		User(int id, double homeX, double homeY) {
+			this->id = id;
+			this->homeX = homeX;
+			this->homeY = homeY;
+		}
+		
 		User(const User &other) {
 			this->id = other.id;
 			this->homeX = other.homeX;
