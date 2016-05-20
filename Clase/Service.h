@@ -99,14 +99,14 @@ public:
 
 	Array<int> Service::usersWithBestBuyToDiscountRate(int K){
  	
- 		Array<int>* array = new Array<int>(K);
- 		Heap<User> auxHeap = ratioHeap;
+ 		Array<int> array[K]; 
+ 		Heap<User> auxHeap(ratioHeap);
 
  		for ( i = 0; i < K && auxHeap.size() > 0; i++){
  			 User top = auxHeap.extract();
  			 array[i].push_back() = top.getId();
  		}
- 		delete[] array;
+ 	
 	 }
 
 	 int userWithMostInvites(){
