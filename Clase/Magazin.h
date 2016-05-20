@@ -195,13 +195,3 @@ template<typename T>
 void Magazin <T> :: setY(double newY) {
 	this->storeY = newY;
 }
-
-Array<int> usersWithBestBuyToDiscountRate(int K){
- 	
- 	Array<int>* array = new Array<int>(K);
- 	Heap<User> auxHeap = ratioHeap;
- 	for ( i = 0; i < K && auxHeap.size() > 0; i++){
- 		 User top = auxHeap.extract();
- 		 array[i].push_back() = top.id;
- 	}
- }
