@@ -41,19 +41,19 @@ public:
 
 template < typename T >
 Heap <T> :: Heap(const Heap &other) {
-        H = other.H;
-        cmp = other.cmp;
-        index = other.index;
-        capacity = other.capacity;
-        dimension = other.dimension;
+    H = other.H;
+    cmp = other.cmp;
+    index = other.index;
+    capacity = other.capacity;
+    dimension = other.dimension;
 
-        position = new int[capacity];
-        if (dimension > 0) {
-            for (int i = 0; i < other.dimension; ++i) {
-                position[i] = other.position[i];
-            }
+    position = new int[capacity];
+    if (dimension > 0) {
+        for (int i = 0; i < other.dimension; ++i) {
+            position[i] = other.position[i];
         }
     }
+}
 
 template <typename T>
 void Heap <T> :: Swap(const int x, const int y) {
@@ -87,9 +87,6 @@ Heap <T> :: Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <
     index = 0;
     cmp = compare;
     dimension = 0;
-    /*Pair <T, int > aux;
-    aux.makePair(T(), -1);
-    H.push_back(aux);*/
     this->capacity = capacity;
     position = new int[capacity];
 }
@@ -117,13 +114,6 @@ int Heap <T> :: rightSubtree(int pos) {
 template <typename T>
 void Heap <T> :: pushUp(int pos) {
     while ( pos > 0 && cmp(H[pos], H[parent(pos)]) ) {
-        /*Pair<T, int> aux = H[pos];
-        H[pos] = H[parent(pos)];
-        H[parent(pos)] = aux;
-
-        int aux2 = position[H[pos].second];
-        position[H[pos].second] = position[H[parent(pos)].second];
-        position[H[parent(pos)].second] = aux2;*/
         Swap(pos, parent(pos));
         pos = parent(pos);
     }
@@ -138,14 +128,6 @@ void Heap <T> :: pushDown(int pos) {
             if (leftSon > dimension) { // daca nu am fiu stanga
                 break;
             } else if ( cmp(H[leftSon], H[pos]) ) {
-                /*Pair <T, int> aux = H[pos];
-                H[pos] = H[leftSon];
-                H[leftSon] = aux;
-
-                int aux2 = position[H[pos].second];
-                position[H[pos].second] = position[H[leftSon].second];
-                position[H[leftSon].second] = aux2;*/
-
                 Swap(leftSon, pos);
                 pos = leftSon;
             } else {
@@ -153,24 +135,9 @@ void Heap <T> :: pushDown(int pos) {
             }
         } else {
             if (H[leftSon].first <= H[rightSon].first && cmp(H[leftSon], H[pos])) {
-                /*Pair <T, int> aux = H[pos];
-                H[pos] = H[leftSon];
-                H[leftSon] = aux;
-
-                int aux2 = position[H[pos].second];
-                position[H[pos].second] = position[H[leftSon].second];
-                position[H[leftSon].second] = aux2;*/
                 Swap(leftSon, pos);
                 pos = leftSon;
             } else if (H[rightSon].first <= H[leftSon].first && cmp(H[rightSon], H[pos])) {
-                /*Pair <T, int> aux = H[pos];
-                H[pos] = H[rightSon];
-                H[rightSon] = aux;
-
-                int aux2 = position[H[pos].second];
-                position[H[pos].second] = position[H[rightSon].second];
-                position[H[rightSon].second] = aux2;*/
-
                 Swap(rightSon, pos);
                 pos = rightSon;
             }
@@ -199,15 +166,7 @@ T Heap <T> :: peek() {
         T x;
         return x;
     }
-
-    /*for (int i = 0; i < dimension; ++i) {
-        cout << i + 1 << ' ';
-    }cout << '\n';
-
-    for (int i = 0; i < dimension; ++i) {
-        cout << position[i] + 1 << ' ';
-    } cout << '\n';*/
-
+    
     return H[1].first;
 }
 
