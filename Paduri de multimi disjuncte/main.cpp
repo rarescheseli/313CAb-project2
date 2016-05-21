@@ -41,5 +41,15 @@ int main() {
 	a.print(); cout << '\n';
 	a.unite(6, 11);
 	a.print();
+
+	cout << '\n';
+
+	Array <int> test = a.setsDimensions();
+
+	for (int i = 0; i < test.size(); ++i) {
+		cout << test[i] << " ";
+	}
+	cout << '\n';
+
 	return 0;
 }

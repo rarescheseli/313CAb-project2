@@ -17,7 +17,19 @@ public:
 	void unite(int x, int y); /*uneste mulimile din care fac parte nodurile x si y*/
 	void addSet(int node);
 	void print();
+
+	Array <int> setsDimensions();
 };
+
+Array <int> DisjointSet::setsDimensions() {
+	Array <int> result;
+
+	for (int i = 0; i < sets.size(); ++i) {
+		result.push_back(setSize[sets[i]]);
+	}
+
+	return result;
+}
 
 void DisjointSet::print() {
 	for (int i = 0; i < sets.size(); ++i) {
