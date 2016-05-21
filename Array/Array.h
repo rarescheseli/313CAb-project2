@@ -68,6 +68,8 @@ struct Array {
 
     // Metoda pentru "Subscripting operator" 
     T &operator[](int position);
+
+    void quickSort(int pinitial, int pfinal);
 };
 
 template <typename T>
@@ -116,4 +118,33 @@ T& Array<T>::operator[](int position) {
     }
 
     return resultData[position];
+}
+
+template <typename T>
+void Array<T> :: quickSort(int pinitial, int pfinal) {
+    int m = (pinitial + pfinal) >> 1;
+    int i = pinitial;
+    int j = pfinal;
+    T pivot = resultData[m];
+
+    while (i <= j) {
+        while (resultData[i] < pivot)
+            i++;
+        while (pivot < resultData[j])
+            j--;
+
+        if (i <= j) {
+            T temp = resultData[i];
+            resultData[i] = resultData[j];
+            resultData[j] = temp;
+            i++;
+            j--;
+        }
+    }
+    if (pinitial < j) {
+        quickSort(pinitial, j);
+    }
+    if (i < pfinal) {
+        quickSort(i, pfinal);
+    }
 }

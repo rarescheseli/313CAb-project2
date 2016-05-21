@@ -5,7 +5,7 @@
 
 #include "heap.h"
 #include "AVL.h"
-#define maxNr 200000
+#define maxNr 300000
 
 
 struct zi {
@@ -146,8 +146,9 @@ Magazin<T>::Magazin(const Magazin<T> &other) {
 
 template<typename T>
 Magazin <T> :: ~Magazin() {
-	// Mai nevoie daca AVL-ul are destructorul lui ?
-	this->root = NULL;
+	if (root != NULL) {
+		delete root;
+	}
 	delete[] zile;
 	delete distante;
 	delete discount;
