@@ -18,7 +18,7 @@ int main() {
 	f >> N >> M;
 
 	for (int i = 1; i <= N; ++i) {
-		a.addSet(i);
+		a.addSet(i,i+100);
 	}
 
 	for (int i = 1; i <= M; ++i) {
@@ -37,7 +37,7 @@ int main() {
 		cout << '\n';
 	}
 
-	a.addSet(11);
+	a.addSet(11,11+100);
 	a.print(); cout << '\n';
 	a.unite(6, 11);
 	a.print();
