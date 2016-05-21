@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "User.h"
 #include "Heap.h"
@@ -15,13 +14,9 @@ struct Array {
 };
 
 class Service {
-
 private:
 	int idUserMostInv;
-
 public:
-	
-
     void createUser(int id, double homeX, double homeY);
 
     void createStore(int id, double storeX, double storeY);
@@ -73,42 +68,39 @@ public:
     // Returneaza latitudine si longitudine pentru locatia recomandata pentru un nou magazin
     pair<double, double> newStoreCoordinates();
 };
-	void Service::createUser(int id, double homeX, double homeY){
-		//TODO
+
+void Service::createUser(int id, double homeX, double homeY){
+	//TODO
+}
+
+void Service::createStore(int id, double storeX, double storeY){
+	//TODO
+}
+
+void Service::invite (int userWhichInvites, int invitedUser) {
+	ClientsGraph[userWhichInvites].push_back(invitedUser)
+
+	if ( ClientsGraph[userWhichInvites].size() > ClientsGraph[idUserMostInv].size() ){
+		idUserMostInv = userWhichInvites;
 	}
+	else if ( ClientsGraph[userWhichInvites].size() == ClientsGraph[idUserMostInv].size() 
+        && userWhichInvites < idUserMostInv){
+		idUserMostInv = userWhichInvites;
+	}	
+}
 
-	void Service::createStore(int id, double storeX, double storeY){
-		//TODO
+Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
+	Array <int> array; 
+	Heap <User> auxHeap(ratioHeap);
+
+	for (int i = 0; i < K && auxHeap.size() > 0; i++){
+		User top = auxHeap.extract();
+		array.push_back( top.getId() );
 	}
+	
+    return array;
+}
 
-
-	void Service::invite (int userWhichInvites, int invitedUser) {
-
-		directedClientsGraph[userWhichInvites].push_back(invitedUser);
-		undirectedClientsGraph[userWhichInvites].push_back(invitedUser);
-		undirectedClientsGraph[invitedUser].push_back(userWhichInvites);
-
-		if ( directedClientsGraph[userWhichInvites].size() > directedClientsGraph[mostInv].size() ){
-			idUserMostInv = userWhichInvites;
-		}
-		else if ( directedClientsGraph[userWhichInvites].size() == directedClientsGraph[mostInv].size() 
-				  && userWhichInvites < idUserMostInv){
-			idUserMostInv = userWhichInvites;
-			}	
-	}
-
-	Array<int> Service::usersWithBestBuyToDiscountRate(int K){
- 	
- 		Array<int> array; 
- 		Heap<User> auxHeap(ratioHeap);
-
- 		for ( i = 0; i < K && auxHeap.size() > 0; i++){
- 			 User top = auxHeap.extract();
- 			 array.push_back( top.getId() );
- 		}
- 	  return array;
-	 }
-
-	 int userWithMostInvites(){
-		return idUserMostInv;
-	}
+int userWithMostInvites(){
+	return idUserMostInv;
+}

@@ -17,19 +17,19 @@ template<typename T>
 class Magazin {
 	int storeId;
 	struct zi *zile;
-	AVLnode<T> *root;
+	AVLnode <T> *root;
 
 	// TODO -> de pus functie de cmp pt heap
-	Heap<int> *discount;
+	Heap <int> *discount;
 	double storeX, storeY;
 
 	// TODO -> de pus functie de cmp pt heap
-	Heap<double> *distante;
+	Heap <double> *distante;
 
 public:
 	Magazin();
 	Magazin(int storeId, double storeX, double storeY);
-	Magazin(const Magazin<T> &other);
+	Magazin(const Magazin <T> &other);
 	~Magazin();
 
 	int getId();
@@ -38,34 +38,50 @@ public:
 	void setId(int newId);
 	void setX(double newX);
 	void setY(double newY);
+	Array < int > topKdays(int K);
 	Array < int > topKdiscounts(int K);
 	Array < double > topKdistances(int K);
 	void visit(int timestamp, User client, int discount);
-	void quickSort(zi vector[365], int pinitial, int pfinal);
+	void quickSort(int pinitial, int pfinal);
 };
+
+template < typename T >
+Array < int > Magazin <T> :: topKdays(int K) {
+	Array < int > result;
+	quicksort(1, 365);
+
+	for (int i = 365; i > 0 && K > 0; --i) {
+		if (zile[i].nrVizite > 0) {
+			result.push_back(zile[i].nrZi);
+			--K;
+		}
+	}
+
+	return result;
+}
 
 template <typename T>
 Array < int > Magazin <T> :: topKdiscounts(int K) {
-	Array < int > a;
+	Array < int > result;
 	Heap < int > aux(discount);
 	while (K > 0 && aux.size() > 0) {
-		a.push_back(aux.extract());
+		result.push_back(aux.extract());
 		--K;
 	}
 
-	return a;
+	return result;
 }
 
 template < typename T>
 Array < double > Magazin <T> :: topKdistances(int K) {
-	Array < double > a;
+	Array < double > result;
 	Heap < double > aux(distante);
 	while (K > 0 && aux.size() > 0) {
-		a.push_back(aux.extract());
+		result.push_back(aux.extract());
 		--K;
 	}
 
-	return a;
+	return result;
 }
 
 template <typename T>
@@ -138,31 +154,31 @@ Magazin <T> :: ~Magazin() {
 }
 
 template<typename T>
-void Magazin <T> :: quickSort(zi vector[365], int pinitial, int pfinal) {
+void Magazin <T> :: quickSort(int pinitial, int pfinal) {
 	int m = (pinitial + pfinal) >> 1;
+	zi pivot = zile[m];
 	int i = pinitial;
 	int j = pfinal;
-	zi pivot = vector[m];
 
 	while (i <= j) {
-		while (vector[i].nrVizite < pivot.nrVizite)
+		while (zile[i].nrVizite < pivot.nrVizite)
 			i++;
-		while (pivot.nrVizite < vector[j].nrVizite)
+		while (pivot.nrVizite < zile[j].nrVizite)
 			j--;
 
 		if (i <= j) {
-			zi temp = vector[i];
-			vector[i] = vector[j];
-			vector[j] = temp;
+			zi temp = zile[i];
+			zile[i] = zile[j];
+			zile[j] = temp;
 			i++;
 			j--;
 		}
 	}
 	if (pinitial < j) {
-		quicksort(vector, pinitial, j);
+		quicksort(pinitial, j);
 	}
 	if (i < pfinal) {
-		quicksort(vector, i, pfinal);
+		quicksort(i, pfinal);
 	}
 }
 
