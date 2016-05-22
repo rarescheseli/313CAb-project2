@@ -33,14 +33,15 @@ int main() {
 		}*/
 
 		a.unite(x, y);
-		a.print();
+		a.print1();
+
 		cout << '\n';
 	}
 
 	a.addSet(11,11+100);
-	a.print(); cout << '\n';
+	a.print1(); cout << '\n';
 	a.unite(6, 11);
-	a.print();
+	a.print1();
 
 	cout << '\n';
 
