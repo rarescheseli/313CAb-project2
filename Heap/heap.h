@@ -1,9 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include "pair.h"
-#include "resizablearray.h"
-
 template <typename T>
 class Heap {
 private:
@@ -12,7 +8,7 @@ private:
     // position[i] = pozitia din heap pe care se afla elementul inserat al i-lea in ordine cronologica
     int *position;
     int dimension, index;
-    ResizableArray < Pair < T, int > > H;
+    Array < Pair < T, int > > H;
 
     int parent(int pos);
     void pushUp(int pos);

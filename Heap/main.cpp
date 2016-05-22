@@ -5,7 +5,7 @@
 using namespace std;
 
 #include "pair.h"
-#include "resizablearray.h"
+#include "Array.h"
 #include "heap.h"
 
 int cmpMax(const Pair<int, int> &elem1, const Pair<int, int> &elem2) {
