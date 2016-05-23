@@ -123,7 +123,6 @@ void Service::createStore(int id, double storeX, double storeY) {
 void Service::invite (int userWhichInvites, int invitedUser) {
 	ClientsGraph[userWhichInvites].push_back(invitedUser)
 
-    hashClienti.getValue(userWhichInvites).second
     int nodeWhichInvites = hashClienti.getValue(userWhichInvites).second
     int invitedNode = hashClienti.getValue(invitedUser).second;
 
