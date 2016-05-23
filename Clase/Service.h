@@ -4,6 +4,8 @@
 #include "User.h"
 #include "Heap.h"
 #include "Magazin.h"
+#include "disjointset.h"
+
 using namespace std;
 
 // template<typename T>
@@ -30,6 +32,10 @@ private:
 
     // hash care ma duce din idMagazin -> al catelea a fost adaugat in ordine cronologica
     Hash hashMagazine;
+
+    //paduri
+    DisjointSet disjointSet;
+
     int idUserMostInv;
     int longestChainSize;
     Heap <User> ratioHeap;
@@ -84,7 +90,7 @@ public:
 
     // O lista de perechi de forma (idGrup, numarMediuDeVizite)
     // Id-ul unui grup se considera minimul id-urilor utilizatorilor din acel grup
-    Array<pair<int, double>> averageVisitsPerUser();
+    Array< pair<int, double> > averageVisitsPerUser();
 
     // Returneaza latitudine si longitudine pentru locatia recomandata pentru un nou magazin
     pair<double, double> newStoreCoordinates();
@@ -105,6 +111,8 @@ void Service::createUser(int id, double homeX, double homeY) {
     longestChain.push_back(0);
     users.push_back(User(id, homeX), homeY);
     hashClienti.insert(id, users.size() - 1);
+
+    disjointset.addSet(users.size() - 1);
 }
 
 void Service::createStore(int id, double storeX, double storeY) {
@@ -115,8 +123,8 @@ void Service::createStore(int id, double storeX, double storeY) {
 void Service::invite (int userWhichInvites, int invitedUser) {
 	ClientsGraph[userWhichInvites].push_back(invitedUser)
 
-    int nodeWhichInvites = magicFunction(userWhichInvites);
-    int invitedNode = magicFunction(invitedUser);
+    int nodeWhichInvites = hashClienti.getValue(userWhichInvites).second
+    int invitedNode = hashClienti.getValue(invitedUser).second;
 
 	if ( ClientsGraph[nodeWhichInvites].size() > ClientsGraph[idUserMostInv].size() ){
 		idUserMostInv = nodeWhichInvites;
@@ -132,6 +140,15 @@ void Service::invite (int userWhichInvites, int invitedUser) {
     if (longestChain[invitedNode] > longestChainSize) {
         longestChainSize = longestChain[invitedNode];
     }
+
+    //paduri
+    disjointSet.unite(nodeWhichInvites, invitedNode); 
+}
+
+void Service::visit(int timestamp, int clientId, int storeId, int discount) {
+    int node = hashClienti.getValue(clientId).second
+
+    disjointSet.addVisit(node);
 }
 
 Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
@@ -155,4 +172,16 @@ int Service::userWithMostInvites() {
 
 int Servic::longestInvitesChainSize() {
     return longestChainSize;
+}
+
+Array<int> Service::distinctGroupsOfUsers() {
+    return disjointSet.setsDimensions();
+}
+
+Array<int> Service::topKGroupsWithMostVisitsOverall(int K) {
+    return disjointSet.topKGroups();
+}
+
+Array< pair<int, double> > averageVisitsPerUser() {
+    return disjointSet.setsAverage();
 }
