@@ -6,12 +6,13 @@ struct zi {
 };
 
 class Magazin {
+	bool firstVisit;
 	int storeId;
 	double storeX;
 	double storeY;
-	struct zi *zile;
 	int heapCapacity;
-	// AVLnode <int> *root;
+	AVLnode <int> *root;
+	struct zi *zile, *aux;
 
 	Heap <int> discount;
 	Heap <double> distante;
@@ -37,6 +38,9 @@ public:
 
 Array <int> Magazin::topKdays(int K) {
 	Array < int > result;
+	for (int i = 0; i < 366; ++i) {
+		aux[i] = zile[i];
+	}
 	quickSort(1, 365);
 
 	for (int i = 365; i > 0 && K > 0; --i) {
@@ -72,12 +76,23 @@ Array <double> Magazin::topKdistances(int K) {
 }
 
 void Magazin::visit(int timestamp, User client, int discount) {
-	// TODO -> transformat timestamp in zi + bagat date in AVL
+	int zi = timestamp / 86400;
+	if (timestamp % 86400 > 0) {
+		++zi;
+	}
+
+	++zile[zi].nrVizite;
+	if (firstVisit == false) {
+		firstVisit = true;
+		root = new AVLnode <int>(timestamp);
+	} else {
+		root->insert(timestamp);
+	}
+
 	double distance = sqrt( (client.getX() - storeX) * (client.getX() - storeX)
 						+ (client.getY() - storeY) * (client.getY() - storeY));
-
 	distante.insert(distance);
-
+	
 	if (discount != -1) {
 		this->discount.insert(discount);
 	}
@@ -87,10 +102,9 @@ Magazin::Magazin() {
 	this->storeX = 0;
 	this->storeY = 0;
 	this->storeId = 0;
-	//this->root = new AVLnode<T>();
-	// this->distante = new Heap<double>(maxNr, cmpMax);
-	// this->discount = new Heap<int>(maxNr, cmpMax);
+	firstVisit = false;
 
+	aux = new zi[366];
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = 0;
@@ -102,12 +116,10 @@ Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
 	this->storeId = storeId;
 	this->storeX = storeX;
 	this->storeY = storeY;
+	firstVisit = false;
 	this->heapCapacity = heapCapacity;
-	
-	//this->root = new AVLnode<int>();
-	/*this->distante = new Heap<double>(maxNr, cmp);
-	this->discount = new Heap<int>(maxNr, cmp);*/
 
+	aux = new zi[366];
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = 0;
@@ -131,30 +143,30 @@ Magazin::Magazin(const Magazin &other) {
 }
 
 Magazin::~Magazin() {
-	// if (root != NULL) {
-	// 	delete root;
-	// }
+	if (root != NULL) {
+		delete root;
+	}
+
 	delete[] zile;
-	// delete distante;
-	// delete discount;
+	delete[] aux;
 }
 
 void Magazin::quickSort(int pinitial, int pfinal) {
 	int m = (pinitial + pfinal) >> 1;
-	zi pivot = zile[m];
+	zi pivot = aux[m];
 	int i = pinitial;
 	int j = pfinal;
 
 	while (i <= j) {
-		while (zile[i].nrVizite < pivot.nrVizite)
+		while (aux[i].nrVizite < pivot.nrVizite)
 			i++;
-		while (pivot.nrVizite < zile[j].nrVizite)
+		while (pivot.nrVizite < aux[j].nrVizite)
 			j--;
 
 		if (i <= j) {
-			zi temp = zile[i];
-			zile[i] = zile[j];
-			zile[j] = temp;
+			zi temp = aux[i];
+			aux[i] = aux[j];
+			aux[j] = temp;
 			i++;
 			j--;
 		}

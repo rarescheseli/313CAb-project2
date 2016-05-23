@@ -37,11 +37,11 @@ int main(void)
         std::cout << '\n';
     }
 
-    for (int i = 1; i < 1000; ++i) {
+    for (int i = 1000 - 1; i > 0; --i) {
         if (v[i] != 0) {
             cout << i << ' ' << v[i] << '\n';
 
-            heap.update(v[i], 1000);
+            heap.update(v[i], 1);
             break;
         }
     }
