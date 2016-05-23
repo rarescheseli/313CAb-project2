@@ -1,22 +1,38 @@
 #include <iostream>
+#include "Array.h"
+#include "hash.h"
 #include "User.h"
 #include "Heap.h"
 #include "Magazin.h"
 using namespace std;
 
-template<typename T>
-struct Array {
-    int resultSize;
-    T* resultData;
+// template<typename T>
+// struct Array {
+//     int resultSize;
+//     T* resultData;
 
-    Array(int resultSize, T* resultData) :
-        resultSize(resultSize), resultData(resultData) {}
-};
+//     Array(int resultSize, T* resultData) :
+//         resultSize(resultSize), resultData(resultData) {}
+// };
+
+#define MAX_CAPACITY 300005
 
 class Service {
 private:
-	int idUserMostInv;
+    // bag userii in ordine cronologica
+    Array <User> users;
+
+    // bag magazinele in ordine cronologica
+    Array <Magazin> magazine;
+
+    // hash care ma duce din idUser -> al catelea a fost adaugat in ordine cronologica
+    Hash hashClienti;
+
+    // hash care ma duce din idMagazin -> al catelea a fost adaugat in ordine cronologica
+    Hash hashMagazine;
+    int idUserMostInv;
     int longestChainSize;
+    Heap <User> ratioHeap;
     Array <int> longestChain;
 public:
 
@@ -75,18 +91,25 @@ public:
 };
 
 Service::Service() {
+    User aux;
+    Magazin aux2;
+    users.push_back(aux);
+    magazine.push_back(aux2);
+
     idUserMostInv = 0;
     longestChainSize = 0;
     longestChain.push_back(0);
 }
 
-void Service::createUser(int id, double homeX, double homeY){
-	//TODO
+void Service::createUser(int id, double homeX, double homeY) {
     longestChain.push_back(0);
+    users.push_back(User(id, homeX), homeY);
+    hashClienti.insert(id, users.size() - 1);
 }
 
-void Service::createStore(int id, double storeX, double storeY){
-	//TODO
+void Service::createStore(int id, double storeX, double storeY) {
+    magazine.push_back(Magazin(id, store, storeY, MAX_CAPACITY));
+    hashMagazine.insert(id, magazine.size() - 1);
 }
 
 void Service::invite (int userWhichInvites, int invitedUser) {
@@ -124,6 +147,7 @@ Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
 }
 
 int Service::userWithMostInvites() {
+    if (idUserMostInv == 0)
 	return idUserMostInv;
 }
 
