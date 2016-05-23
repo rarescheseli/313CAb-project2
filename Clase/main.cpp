@@ -2,7 +2,6 @@
 
 using namespace std;
 
-#include "pair.h"
 #include "Array.h"
 #include "hash.h"
 #include "User.h"
@@ -22,16 +21,12 @@ int main() {
         H.insert(a[i], i);
     }
 
-    for (int i = 1; i <= 500000; ++i) {
-        g << i << ' ' << a[i] << '\n';
-    }
-
     Magazin M(532314, 124253.5, 2342.4, 300000);
     cout << fixed << setprecision(3);
     cout << M.getId() << ' ' << M.getX() << ' ' << M.getY() << '\n';
 
     for (int i = 1; i <= 300000; ++i) {
-        User gigel(rand(), rand() % 100000, rand() % 100000);
+        User gigel(rand(), double(rand() % 100000), double(rand() % 100000));
         if (i & 1) {
             M.visit(rand(), gigel, -1);
         } else {
@@ -46,12 +41,12 @@ int main() {
     reverse(v.begin(), v.end());
     Array <int> topKdiscounts = M.topKdiscounts(100);
     for (int i = 0; i < topKdiscounts.size(); ++i) {
-        cout << topKdiscounts[i] << ' ' << v[i] << '\n';
-    } cout << '\n';
+        g << topKdiscounts[i] << ' ' << v[i] << '\n';
+    } g << '\n';
 
     Array <double> topKdistances = M.topKdistances(100);
     for (int i = 0; i < topKdistances.size(); ++i) {
-        cout << topKdistances[i] << '\n';
-    } cout << '\n';
+        g << topKdistances[i] << '\n';
+    } g << '\n';
     return 0;
 }

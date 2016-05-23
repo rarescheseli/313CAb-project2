@@ -1,10 +1,10 @@
 #pragma once
 
-#define NMAX 300000
+#define NMAX 300005
 
 // cmpMax
 template <typename T>
-int cmpMax(const Pair<T, int> &elem1, const Pair<T, int> &elem2) {
+int cmpMax(const pair<T, int> &elem1, const pair<T, int> &elem2) {
     if (elem1.first > elem2.first) {
         return 1;
     }
@@ -13,7 +13,7 @@ int cmpMax(const Pair<T, int> &elem1, const Pair<T, int> &elem2) {
 
 // cmpMin
 template <typename T>
-int cmpMin(const Pair<T, int> &elem1, const Pair<T, int> &elem2) {
+int cmpMin(const pair<T, int> &elem1, const pair<T, int> &elem2) {
     if (elem1.first < elem2.first) {
         return 1;
     }
@@ -28,7 +28,7 @@ private:
     // position[i] = pozitia din heap pe care se afla elementul inserat al i-lea in ordine cronologica
     int *position;
     int dimension, index;
-    Array < Pair < T, int > > H;
+    Array < pair < T, int > > H;
 
     int parent(int pos);
     void pushUp(int pos);
@@ -37,10 +37,10 @@ private:
     int rightSubtree(int pos);
     void Swap(const int x, const int y);
     // pointer la o functie care comparara doua elemente
-    int (*cmp)(const Pair <T, int> &, const Pair <T, int>&);
+    int (*cmp)(const pair <T, int> &, const pair <T, int>&);
 public:
     Heap();
-    Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&));
+    Heap(int capacity, int (*compare)(const pair <T, int>&, const pair <T, int>&));
     ~Heap();
 
     // Copy constructor
@@ -64,7 +64,7 @@ Heap <T> ::Heap() {
     this->capacity = NMAX;
 
     // adaug un element pe care nu-l accesez niciodata pentru a avea heapul indexat de la 1
-    Pair <T, int> aux;
+    pair <T, int> aux;
     aux.second = -1;
     H.push_back(aux);
     position = new int[capacity];
@@ -114,14 +114,14 @@ int Heap <T> :: size() {
 }
 
 template <typename T>
-Heap <T> :: Heap(int capacity, int (*compare)(const Pair <T, int>&, const Pair <T, int>&)) {
+Heap <T> :: Heap(int capacity, int (*compare)(const pair <T, int>&, const pair <T, int>&)) {
     index = 0;
     cmp = compare;
     dimension = 0;
-    this->capacity = capacity;
+    this->capacity = capacity + 1;
 
     // adaug un element pe care nu-l accesez niciodata pentru a avea heapul indexat de la 1
-    Pair <T, int> aux;
+    pair <T, int> aux;
     aux.second = -1;
     H.push_back(aux);
     position = new int[capacity];
@@ -176,9 +176,9 @@ void Heap <T> :: insert(T x) {
     }
 
     position[++index] = ++dimension;
-    Pair <T, int> aux;
-    aux.makePair(x, index);
-    H.push_back(aux);
+    // Pair <T, int> aux;
+    // aux.makePair(x, index);
+    H.push_back(make_pair(x, index));
     pushUp(dimension);
 }
 

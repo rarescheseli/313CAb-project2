@@ -4,17 +4,17 @@
 
 class Hash {
 private:
-    Array < Pair < int, int > > *H;
+    Array < pair < int, int > > *H;
 public:
     Hash();
     ~Hash();
 
     void insert(int key, int value);
-    Pair <int, int> getValue(int key);
+    pair <int, int> getValue(int key);
 };
 
 Hash::Hash() {
-    H = new Array < Pair <int, int> >[MOD];
+    H = new Array < pair <int, int> >[MOD];
 }
 
 Hash::~Hash() {
@@ -23,11 +23,10 @@ Hash::~Hash() {
 
 void Hash::insert(int key, int value) {
     int bucket = key % MOD;
-    Pair <int, int> data(key, value);
-    H[bucket].push_back(data);
+    H[bucket].push_back(make_pair(key, value));
 }
 
-Pair <int, int> Hash::getValue(int key) {
+pair <int, int> Hash::getValue(int key) {
     int bucket = key % MOD;
     for (int i = 0; i < H[bucket].size(); ++i) {
         if (H[bucket][i].first == key) {
@@ -35,5 +34,5 @@ Pair <int, int> Hash::getValue(int key) {
         }
     }
 
-    return Pair <int, int>(-1, -1);
+    return make_pair(-1, -1);
 }
