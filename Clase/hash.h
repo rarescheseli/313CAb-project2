@@ -10,7 +10,7 @@ public:
     ~Hash();
 
     void insert(int key, int value);
-    int getValue(int key);
+    Pair <int, int> getValue(int key);
 };
 
 Hash::Hash() {
@@ -27,13 +27,13 @@ void Hash::insert(int key, int value) {
     H[bucket].push_back(data);
 }
 
-int Hash::getValue(int key) {
+Pair <int, int> Hash::getValue(int key) {
     int bucket = key % MOD;
     for (int i = 0; i < H[bucket].size(); ++i) {
         if (H[bucket][i].first == key) {
-            return H[bucket][i].second;
+            return H[bucket][i];
         }
     }
 
-    return -1;
+    return Pair <int, int>(-1, -1);
 }
