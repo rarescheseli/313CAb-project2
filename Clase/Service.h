@@ -138,7 +138,7 @@ Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
 	Array <int> array; 
 	Heap <User> auxHeap(ratioHeap);
 
-	for (int i = 0; i < K && auxHeap.size() > 0; i++){
+	for (int i = 0; i < K && auxHeap.size() > 1; i++){
 		User top = auxHeap.extract();
 		array.push_back( top.getId() );
 	}
