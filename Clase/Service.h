@@ -16,7 +16,12 @@ struct Array {
 class Service {
 private:
 	int idUserMostInv;
+    int longestChainSize;
+    Array <int> longestChain;
 public:
+
+    Service();
+
     void createUser(int id, double homeX, double homeY);
 
     void createStore(int id, double storeX, double storeY);
@@ -69,8 +74,15 @@ public:
     pair<double, double> newStoreCoordinates();
 };
 
+Service::Service() {
+    idUserMostInv = 0;
+    longestChainSize = 0;
+    longestChain.push_back(0);
+}
+
 void Service::createUser(int id, double homeX, double homeY){
 	//TODO
+    longestChain.push_back(0);
 }
 
 void Service::createStore(int id, double storeX, double storeY){
@@ -80,13 +92,23 @@ void Service::createStore(int id, double storeX, double storeY){
 void Service::invite (int userWhichInvites, int invitedUser) {
 	ClientsGraph[userWhichInvites].push_back(invitedUser)
 
-	if ( ClientsGraph[userWhichInvites].size() > ClientsGraph[idUserMostInv].size() ){
-		idUserMostInv = userWhichInvites;
+    int nodeWhichInvites = magicFunction(userWhichInvites);
+    int invitedNode = magicFunction(invitedUser);
+
+	if ( ClientsGraph[nodeWhichInvites].size() > ClientsGraph[idUserMostInv].size() ){
+		idUserMostInv = nodeWhichInvites;
 	}
-	else if ( ClientsGraph[userWhichInvites].size() == ClientsGraph[idUserMostInv].size() 
-        && userWhichInvites < idUserMostInv){
-		idUserMostInv = userWhichInvites;
-	}	
+	else if ( ClientsGraph[nodeWhichInvites].size() == ClientsGraph[idUserMostInv].size() 
+        && nodeWhichInvites < idUserMostInv){
+		idUserMostInv = nodeWhichInvites;
+	}
+
+    //pentru longestChain (un fel de dp)
+    longestChain[invitedNode] = longestChain[nodeWhichInvites] + 1;
+
+    if (longestChain[invitedNode] > longestChainSize) {
+        longestChainSize = longestChain[invitedNode];
+    }
 }
 
 Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
@@ -101,6 +123,10 @@ Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
     return array;
 }
 
-int userWithMostInvites(){
+int Service::userWithMostInvites() {
 	return idUserMostInv;
+}
+
+int Servic::longestInvitesChainSize() {
+    return longestChainSize;
 }
