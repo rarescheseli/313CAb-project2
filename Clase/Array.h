@@ -9,25 +9,11 @@ struct Array {
     Array(int resultSize, T* resultData) :
         resultSize(resultSize), resultData(resultData) {}
 
-    Array() {
-        _capacity = 1;
-        resultSize = 0;
-        resultData = new T[1];
-    }
+    Array();
+    ~Array();
 
     // Copy constructor
-    Array(const Array &other) {
-        _capacity = other._capacity;
-        resultSize = other.size();
-
-        if (resultSize > 0) {
-            resultData = new T[_capacity];
-
-            for (int i = 0; i < _capacity; ++i) {
-                resultData[i] = other.resultData[i];
-            }
-        }
-    }
+    Array(const Array &other);
 
     // Copy assignement operator
     Array &operator=(const Array &other) {
@@ -47,9 +33,6 @@ struct Array {
         return *this;
     }
 
-    ~Array() {
-        delete[] resultData;
-    }
 
     int size() const {
         return this->resultSize;
@@ -73,6 +56,32 @@ struct Array {
 
     void quickSort(int pinitial, int pfinal);
 };
+
+template <typename T>
+Array <T> :: Array() {
+    _capacity = 1;
+    resultSize = 0;
+    resultData = new T[1];
+}
+
+template <typename T>
+Array <T> :: ~Array() {
+    delete[] resultData;
+}
+
+template <typename T>
+Array <T> :: Array(const Array &other) {
+    _capacity = other._capacity;
+    resultSize = other.size();
+
+    if (resultSize > 0) {
+        resultData = new T[_capacity];
+
+        for (int i = 0; i < _capacity; ++i) {
+            resultData[i] = other.resultData[i];
+        }
+    }
+}
 
 template <typename T>
 void Array<T>::resize(int newSize) {
