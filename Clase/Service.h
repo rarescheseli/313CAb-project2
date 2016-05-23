@@ -147,7 +147,9 @@ Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
 }
 
 int Service::userWithMostInvites() {
-    if (idUserMostInv == 0)
+    if (idUserMostInv == 0) {
+        return -1;
+    }
 	return idUserMostInv;
 }
 
