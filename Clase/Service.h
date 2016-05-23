@@ -24,6 +24,8 @@ private:
     // bag userii in ordine cronologica
     Array <User> users;
 
+    AVLnode <int> *discountAVL;
+
     // bag magazinele in ordine cronologica
     Array <Magazin> magazine;
 
@@ -37,6 +39,7 @@ private:
     DisjointSet disjointSet;
 
     int idUserMostInv;
+    bool firstDiscount;
     int longestChainSize;
     Heap <User> ratioHeap;
     Array <int> longestChain;
@@ -100,6 +103,7 @@ Service::Service() {
     User aux;
     Magazin aux2;
     users.push_back(aux);
+    firstDiscount = false;
     magazine.push_back(aux2);
 
     idUserMostInv = 0;
@@ -112,7 +116,7 @@ void Service::createUser(int id, double homeX, double homeY) {
     users.push_back(User(id, homeX), homeY);
     hashClienti.insert(id, users.size() - 1);
 
-    disjointset.addSet(users.size() - 1);
+    disjointset.addSet(users.size() - 1, id);
 }
 
 void Service::createStore(int id, double storeX, double storeY) {
@@ -146,9 +150,20 @@ void Service::invite (int userWhichInvites, int invitedUser) {
 }
 
 void Service::visit(int timestamp, int clientId, int storeId, int discount) {
-    int node = hashClienti.getValue(clientId).second
-
+    int node = hashClienti.getValue(clientId).second;
     disjointSet.addVisit(node);
+
+    int mag = hashMagazine.getValue(storeId).second;
+    magazine[mag].visit(timestamp, users[node], discount);
+
+    if (discount != -1) {
+        if (firstDiscount == false) {
+            firstDiscount = true;
+            // de adaugat datele in AVL-ul de discounturi
+        } else {
+            // de adaugat datele in AVL-ul de discounturi
+        }
+    }
 }
 
 Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
