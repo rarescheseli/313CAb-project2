@@ -1,40 +1,30 @@
 #pragma once
 
-#include <iostream>
-#include <cmath>
-
-#include "heap.h"
-#include "AVL.h"
-#define maxNr 300000
-
-
 struct zi {
 	int nrZi;
 	int nrVizite;
 };
 
-template<typename T>
 class Magazin {
 	int storeId;
+	double storeX;
+	double storeY;
 	struct zi *zile;
-	AVLnode <T> *root;
+	int heapCapacity;
+	// AVLnode <int> *root;
 
-	// TODO -> de pus functie de cmp pt heap
-	Heap <int> *discount;
-	double storeX, storeY;
-
-	// TODO -> de pus functie de cmp pt heap
-	Heap <double> *distante;
+	Heap <int> discount;
+	Heap <double> distante;
 
 public:
 	Magazin();
-	Magazin(int storeId, double storeX, double storeY);
-	Magazin(const Magazin <T> &other);
+	Magazin(int storeId, double storeX, double storeY, int heapCapacity);
+	Magazin(const Magazin &other);
 	~Magazin();
 
-	int getId();
-	double getX();
-	double getY();
+	int getId() const;
+	double getX() const;
+	double getY() const;
 	void setId(int newId);
 	void setX(double newX);
 	void setY(double newY);
@@ -45,10 +35,9 @@ public:
 	void quickSort(int pinitial, int pfinal);
 };
 
-template < typename T >
-Array < int > Magazin <T> :: topKdays(int K) {
+Array <int> Magazin::topKdays(int K) {
 	Array < int > result;
-	quicksort(1, 365);
+	quickSort(1, 365);
 
 	for (int i = 365; i > 0 && K > 0; --i) {
 		if (zile[i].nrVizite > 0) {
@@ -60,11 +49,10 @@ Array < int > Magazin <T> :: topKdays(int K) {
 	return result;
 }
 
-template <typename T>
-Array < int > Magazin <T> :: topKdiscounts(int K) {
-	Array < int > result;
+Array <int> Magazin::topKdiscounts(int K) {
+	Array <int> result;
 	Heap < int > aux(discount);
-	while (K > 0 && aux.size() > 0) {
+	while (K > 0 && aux.size() > 1) {
 		result.push_back(aux.extract());
 		--K;
 	}
@@ -72,11 +60,10 @@ Array < int > Magazin <T> :: topKdiscounts(int K) {
 	return result;
 }
 
-template < typename T>
-Array < double > Magazin <T> :: topKdistances(int K) {
+Array <double> Magazin::topKdistances(int K) {
 	Array < double > result;
 	Heap < double > aux(distante);
-	while (K > 0 && aux.size() > 0) {
+	while (K > 0 && aux.size() > 1) {
 		result.push_back(aux.extract());
 		--K;
 	}
@@ -84,9 +71,8 @@ Array < double > Magazin <T> :: topKdistances(int K) {
 	return result;
 }
 
-template <typename T>
-void Magazin <T> :: visit(int timestamp, User client, int discount) {
-	// TODO -> transformat timestamp in zi
+void Magazin::visit(int timestamp, User client, int discount) {
+	// TODO -> transformat timestamp in zi + bagat date in AVL
 	double distance = sqrt( (client.getX() - storeX) * (client.getX() - storeX)
 						+ (client.getY() - storeY) * (client.getY() - storeY));
 
@@ -97,14 +83,13 @@ void Magazin <T> :: visit(int timestamp, User client, int discount) {
 	}
 }
 
-template<typename T>
-Magazin <T> :: Magazin() {
+Magazin::Magazin() {
 	this->storeX = 0;
 	this->storeY = 0;
 	this->storeId = 0;
-	this->root = new AVLnode<T>();
-	this->distante = new Heap<double>(maxNr, cmp);
-	this->discount = new Heap<int>(maxNr, cmp);
+	//this->root = new AVLnode<T>();
+	// this->distante = new Heap<double>(maxNr, cmpMax);
+	// this->discount = new Heap<int>(maxNr, cmpMax);
 
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
@@ -113,14 +98,15 @@ Magazin <T> :: Magazin() {
 	}
 }
 
-template<typename T>
-Magazin <T> :: Magazin(int storeId, double storeX, double storeY) {
+Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
 	this->storeId = storeId;
 	this->storeX = storeX;
 	this->storeY = storeY;
-	this->root = new AVLnode<T>();
-	this->distante = new Heap<double>(maxNr, cmp);
-	this->discount = new Heap<int>(maxNr, cmp);
+	this->heapCapacity = heapCapacity;
+	
+	//this->root = new AVLnode<int>();
+	/*this->distante = new Heap<double>(maxNr, cmp);
+	this->discount = new Heap<int>(maxNr, cmp);*/
 
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
@@ -129,33 +115,31 @@ Magazin <T> :: Magazin(int storeId, double storeX, double storeY) {
 	}
 }
 
-template<typename T>
-Magazin<T>::Magazin(const Magazin<T> &other) {
-	this->storeId = other->getId();
-	this->storeX = other->getX();
-	this->storeY = other->storeY();
-	this->root = other->root;
-	this->distante = other->distante;
-	this->discount = other->discount;
+Magazin::Magazin(const Magazin &other) {
+	this->storeId = other.getId();
+	this->storeX = other.getX();
+	this->storeY = other.getY();
+	this->distante = other.distante;
+	this->discount = other.discount;
+	this->heapCapacity = other.heapCapacity;
+	// this->root = other->root;
 
 	for (int i = 1; i <= 365; i++) {
-		this->zile[i].nrVizite = other->zile[i].nrVizite;
-		this->zile[i].nrZi = other->zile[i].nrZi;
+		this->zile[i].nrVizite = other.zile[i].nrVizite;
+		this->zile[i].nrZi = other.zile[i].nrZi;
 	}
 }
 
-template<typename T>
-Magazin <T> :: ~Magazin() {
-	if (root != NULL) {
-		delete root;
-	}
+Magazin::~Magazin() {
+	// if (root != NULL) {
+	// 	delete root;
+	// }
 	delete[] zile;
-	delete distante;
-	delete discount;
+	// delete distante;
+	// delete discount;
 }
 
-template<typename T>
-void Magazin <T> :: quickSort(int pinitial, int pfinal) {
+void Magazin::quickSort(int pinitial, int pfinal) {
 	int m = (pinitial + pfinal) >> 1;
 	zi pivot = zile[m];
 	int i = pinitial;
@@ -176,39 +160,33 @@ void Magazin <T> :: quickSort(int pinitial, int pfinal) {
 		}
 	}
 	if (pinitial < j) {
-		quicksort(pinitial, j);
+		quickSort(pinitial, j);
 	}
 	if (i < pfinal) {
-		quicksort(i, pfinal);
+		quickSort(i, pfinal);
 	}
 }
 
-template<typename T>
-int Magazin <T> :: getId() {
+int Magazin::getId() const{
 	return storeId;
 }
 
-template<typename T>
-void Magazin <T> :: setId(int newId) {
-	this->storeId = newId;
-}
-
-template<typename T>
-double Magazin <T> :: getX() {
+double Magazin::getX() const{
 	return storeX;
 }
 
-template<typename T>
-double Magazin <T> :: getY() {
-	return sotreY;
+double Magazin::getY() const{
+	return storeY;
 }
 
-template<typename T>
-void Magazin <T> :: setX(double newX) {
+void Magazin::setId(int newId) {
+	this->storeId = newId;
+}
+
+void Magazin::setX(double newX) {
 	this->storeX = newX;
 }
 
-template<typename T>
-void Magazin <T> :: setY(double newY) {
+void Magazin::setY(double newY) {
 	this->storeY = newY;
 }

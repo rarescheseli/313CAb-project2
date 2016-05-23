@@ -15,7 +15,7 @@ class User {
 			nrCumparaturi=0;
 		}
 		
-		~User();
+		~User() {}
 		
 		User(int id, double homeX, double homeY) {
 			this->id = id;

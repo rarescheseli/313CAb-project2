@@ -31,7 +31,7 @@ int main(void)
 
         v[x] = i;
         heap.insert(x);
-        for (int j = 0; j < heap.size(); ++j) {
+        for (int j = 1; j < heap.size(); ++j) {
             std::cout << heap.getValue(j) << ' ';
         }
         std::cout << '\n';
@@ -46,15 +46,24 @@ int main(void)
         }
     }
 
-    for (int j = 0; j < heap.size(); ++j) {
+    for (int j = 1; j < heap.size(); ++j) {
         std::cout << heap.getValue(j) << ' ';
     }
     std::cout << '\n';
 
     Heap < int > heap2 = heap;
-    for (int j = 0; j < heap.size(); ++j) {
+    for (int j = 1; j < heap.size(); ++j) {
         std::cout << heap2.getValue(j) << ' ';
     }
-    std::cout << '\n';
+    std::cout << '\n'<<'\n';
+
+    while (heap2.size() > 1) {
+        //cout << heap2.extract() << '\n';
+        heap2.extract();
+        for (int i = 1; i < heap2.size(); ++i) {
+            cout << heap2.getValue(i) << ' ';
+        }
+        cout << '\n';
+    }
     return 0;
 }
