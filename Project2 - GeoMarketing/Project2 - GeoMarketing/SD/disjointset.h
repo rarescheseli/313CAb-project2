@@ -9,9 +9,9 @@ private:
 	Array <int> setVisits; /*setVisits[i] = numarul total de vizite al grupului i*/
 	Array <int> setID; /*setID[i] = cel mai mic id din grupul i*/
 	Array <int> position; /*position[i] = pozitia pe care se afla radacina i
-					in vectorul sets*/
-	Array <int> who; /*who[i] = radacina care se afla pe pozitia i 
-			in vectorul sets*/
+						  in vectorul sets*/
+	Array <int> who; /*who[i] = radacina care se afla pe pozitia i
+					 in vectorul sets*/
 	Array <int> sets;
 
 
@@ -32,16 +32,21 @@ public:
 
 };
 
+/*de reparat!! nu returneaza ce trebuie.
+TODO: heap de pair < visits, ID >
+*/
 Array <int> DisjointSet::topKGroups(int K) {
 	Array <int> dimensions = setsDimensions();
 	Array <int> result;
 
-	dimensions.quickSort(0, dimensions.size()-1);
+	dimensions.quickSort(0, dimensions.size() - 1);
 
 	int length = dimensions.size();
-	int firstPos = max(0, length-K);
-	for (int i = length-1; i >= firstPos; --i) {
-		result.push_back(dimensions[i]);
+	int firstPos = max(0, length - K);
+	for (int i = length - 1; i >= firstPos; --i) {
+		if (setSize[sets[i]] > 1) {
+			result.push_back(dimensions[i]);
+		}
 	}
 
 	return result;
@@ -51,8 +56,10 @@ Array < pair<int, double> > DisjointSet::setsAverage() {
 	Array < pair<int, double> > result;
 
 	for (int i = 0; i < sets.size(); ++i) {
-		result.push_back(make_pair(setID[sets[i]],
-			double(setVisits[sets[i]]) / setSize[sets[i]]));
+		if (setSize[sets[i]] > 1) {
+			result.push_back(make_pair(setID[sets[i]],
+				double(setVisits[sets[i]]) / setSize[sets[i]]));
+		}
 	}
 
 	return result;
@@ -67,7 +74,9 @@ Array <int> DisjointSet::setsDimensions() {
 	Array <int> result;
 
 	for (int i = 0; i < sets.size(); ++i) {
-		result.push_back(setSize[sets[i]]);
+		if (setSize[sets[i]] > 1) {
+			result.push_back(setSize[sets[i]]);
+		}
 	}
 
 	return result;
@@ -124,11 +133,11 @@ void DisjointSet::unite(int x, int y) {
 
 	int posX = position[x]; /*pozitia lui x in vectorul sets*/
 	int length = sets.size(); /*numarul de componente conexe*/
-	swap(sets[posX], sets[length-1]);
+	swap(sets[posX], sets[length - 1]);
 	sets.pop_back(); /*pune multimea scoasa (radacina lui x) pe ultima pozitie in sets
-						si apoi o elimina*/
+					 si apoi o elimina*/
 
-	int lastSet = who[length-1]; /*indicele ultimei multimi*/
+	int lastSet = who[length - 1]; /*indicele ultimei multimi*/
 	position[lastSet] = posX;
 	who[posX] = lastSet;
 
@@ -148,11 +157,12 @@ void DisjointSet::addSet(int node, int idNode) {
 
 
 	int length = sets.size();
-	position.push_back(length-1);
+	position.push_back(length - 1);
 
-	if (who.size() == length-1) {
+	if (who.size() == length - 1) {
 		who.push_back(node);
-	} else {
+	}
+	else {
 		who[length - 1] = node;
 	}
 }
