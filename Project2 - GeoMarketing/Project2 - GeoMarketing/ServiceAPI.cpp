@@ -129,7 +129,7 @@ public:
 
 Service::Service() {
 	User aux;
-	Magazin aux2;
+	//Magazin aux2;
 	users.push_back(aux);
 	gradInterior = new int[MAX_CLIENTS]();
 
@@ -138,7 +138,7 @@ Service::Service() {
 
 
 	firstDiscount = false;
-	magazine.push_back(aux2);
+	//magazine.push_back(aux2);
 	ClientsGraph = new Array <int>[MAX_CLIENTS];
 
 	idUserMostInv = 0;
@@ -153,6 +153,10 @@ Service::~Service() {
 }
 
 int Service::visitsInTimeframe(int startTime, int endTime) {
+	if (magazine.size() <= 1) {
+		return 0;
+	}
+
 	int result = 0;
 	int limit = magazine.size() - 1;
 	for (int i = 1; i <= limit; ++i) {
@@ -163,14 +167,19 @@ int Service::visitsInTimeframe(int startTime, int endTime) {
 }
 
 int Service::totalDiscountInTimeframe(int startTime, int endTime) {
+	if (magazine.size() <= 1) {
+		return 0;
+	}
+
 	int final = min(maxTimestamp, endTime);
 	int start = max(minTimestamp, startTime);
 	return (int)discountAVL->getIntervalData(start, final);
 }
 
 int Service::visitsInTimeframeOfStore(int startTime, int endTime, int storeId) {
-	int indexMagazin = hashMagazine.getValue(storeId).second;
-	return magazine[indexMagazin].visitsInTimeframe(startTime, endTime);
+	// int indexMagazin = hashMagazine.getValue(storeId).second;
+	// return magazine[indexMagazin].visitsInTimeframe(startTime, endTime);
+	return 0;
 }
 
 Array<int> Service::biggestKDiscounts(int K, int storeId) {
@@ -197,8 +206,8 @@ void Service::createUser(int id, double homeX, double homeY) {
 }
 
 void Service::createStore(int id, double storeX, double storeY) {
-	magazine.push_back(Magazin(id, storeX, storeY, MAX_CAPACITY));
-	hashMagazine.insert(id, magazine.size() - 1);
+	// magazine.push_back(Magazin(id, storeX, storeY, MAX_CAPACITY));
+	// hashMagazine.insert(id, magazine.size() - 1);
 }
 
 void Service::invite(int userWhichInvites, int invitedUser) {
