@@ -21,7 +21,7 @@ class Magazin {
 	double storeY;
 	int heapCapacity;
 	AVLnode <int> *root;
-	struct zi *zile, *aux;
+	struct zi zile[366], aux[366];
 	int minTimestamp;
 	int maxTimestamp;
 
@@ -135,13 +135,12 @@ Magazin::Magazin() {
 
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
+	root = NULL;
 
-	aux = new zi[366];
-	this->zile = new zi[366];
-	for (int i = 1; i <= 365; i++) {
+	/*for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = 0;
 		this->zile[i].nrZi = i;
-	}
+	}*/
 }
 
 Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
@@ -150,12 +149,10 @@ Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
 	this->storeY = storeY;
 	firstVisit = false;
 	this->heapCapacity = heapCapacity;
-
+	root = NULL;
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
 
-	aux = new zi[366];
-	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = 0;
 		this->zile[i].nrZi = i;
@@ -173,19 +170,17 @@ Magazin::Magazin(const Magazin &other) {
 	this->heapCapacity = other.heapCapacity;
 	this->root = other.root;
 
-	for (int i = 1; i <= 365; i++) {
-		this->zile[i].nrVizite = other.zile[i].nrVizite;
-		this->zile[i].nrZi = other.zile[i].nrZi;
-	}
+	//for (int i = 1; i <= 365; i++) {
+	//	this->zile[i].nrVizite = other.zile[i].nrVizite;
+	//	this->zile[i].nrZi = other.zile[i].nrZi;
+	//}
 }
 
 Magazin::~Magazin() {
-	if (root != NULL) {
+	/*if (root != NULL) {
 		delete root;
 	}
-
-	delete[] zile;
-	delete[] aux;
+*/
 }
 
 void Magazin::quickSort(int pinitial, int pfinal) {

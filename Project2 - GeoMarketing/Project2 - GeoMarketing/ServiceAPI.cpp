@@ -22,14 +22,14 @@ using namespace std;
 // };
 
 #define MAX_CAPACITY 300005
-#define MAX_CLIENTS 200002
+#define MAX_CLIENTS 200
 
 class Service {
 private:
 	// bag userii in ordine cronologica
 	Array <User> users;
 
-	AVLnode <long long> *discountAVL = NULL;
+	AVLnode <long long> *discountAVL;
 
 	// bag magazinele in ordine cronologica
 	Array <Magazin> magazine;
@@ -130,13 +130,14 @@ public:
 Service::Service() {
 	User aux;
 	Magazin aux2;
+	aux2.visit(0, aux, 0);
 	users.push_back(aux);
 	gradInterior = new int[MAX_CLIENTS]();
 
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
 
-
+	discountAVL = NULL;
 	firstDiscount = false;
 	magazine.push_back(aux2);
 	ClientsGraph = new Array <int>[MAX_CLIENTS];
@@ -147,7 +148,8 @@ Service::Service() {
 }
 
 Service::~Service() {
-	delete discountAVL;
+	if (discountAVL != NULL) 
+		delete discountAVL;
 	delete[] gradInterior;
 	delete[] ClientsGraph;
 }
@@ -300,4 +302,11 @@ pair<double, double> Service::newStoreCoordinates() {
 	Point p;
 	newMag = new NewMag(users, magazine, magazine.size() - 1);
 	return make_pair(p.x, p.y);
+}
+
+int main()
+{
+	Service s;
+	s.createUser(1, 25.96966, 44.44577);
+	return 0;
 }

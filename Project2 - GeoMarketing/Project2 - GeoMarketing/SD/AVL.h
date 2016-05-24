@@ -30,11 +30,11 @@ public:
 	}
 
 	~AVLnode() {
-        if (leftNode)
+       /* if (leftNode)
             delete leftNode;
 
         if (rightNode)
-            delete rightNode;
+            delete rightNode;*/
 	}
 
     T getSumData() {
