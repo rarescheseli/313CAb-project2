@@ -121,6 +121,19 @@ public:
 		AVLnode *left = searchKey(key1);
 		AVLnode *right = searchKey(key2);
 		AVLnode *lca = LCA(left, right);
+		AVLnode *current = this;
+
+		// o sa dea segmentation fault cand key1 este mai mic decat minim sau key2 e mai mare decat maxim
+		// while (current->leftNode){
+		// 	current = current->leftNode;
+		// }
+		// if (key1 <= current->key) minim = current;
+
+		// current = this;
+		// while (current->rightNode){
+		// 	current = current->rightNode;
+		// }
+		// if (key1 >= current->key) maxim = current;
 
 		if (lca == left){
 			return 1 + left->getRightSons() - right->getRightSons();
@@ -131,7 +144,7 @@ public:
 		}
 
 		int result = lca->sons;
-		AVLnode *current = lca;
+		current = lca;
 		// scadem ce nu ne trebuie pe drumul de la lca la left
 		while(current != left){
 			if (current->key <= left->key ){
