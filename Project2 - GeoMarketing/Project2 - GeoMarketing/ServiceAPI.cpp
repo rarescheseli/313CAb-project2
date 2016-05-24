@@ -28,7 +28,7 @@ private:
 	// bag userii in ordine cronologica
 	Array <User> users;
 
-	AVLnode <int> *discountAVL = NULL;
+	AVLnode <long long> *discountAVL = NULL;
 
 	// bag magazinele in ordine cronologica
 	Array <Magazin> magazine;
@@ -50,6 +50,9 @@ private:
 	int longestChainSize;
 	Heap <User> ratioHeap;
 	Array <int> longestChain;
+
+	// graf orientat in care pun invitatiile
+	Array <int> *ClientsGraph;
 public:
 
 	Service();
@@ -105,9 +108,6 @@ public:
 
 	// Returneaza latitudine si longitudine pentru locatia recomandata pentru un nou magazin
 	pair<double, double> newStoreCoordinates();
-
-	// graf orientat in care pun invitatiile
-	Array <int> *ClientsGraph;
 };
 
 Service::Service() {
@@ -126,6 +126,40 @@ Service::Service() {
 Service::~Service() {
 	delete discountAVL;
 	delete[] ClientsGraph;
+}
+
+int Service::visitsInTimeframe(int startTime, int endTime) {
+	int result = 0;
+	int limit = magazine.size() - 1;
+	for (int i = 1; i < limit; ++i) {
+		result += magazine[i].visitsInTimeFrame(startTime, endTime);
+	}
+
+	return result;
+}
+
+int Service::totalDiscountInTimeframe(int startTime, int endTime) {
+	return (int)discountAVL.getIntervalData(startTime, endTime);
+}
+
+int Service::visitsInTimeframeOfStore(int startTime, int endTime, int storeId) {
+	int indexMagazin = hashMagazine.getValue(storeId).second;
+	return magazine[indexMagazin].visitsInTimeframe(startTime, endTime);
+}
+
+Array<int> Service::biggestKDiscounts(int K, int storeId) {
+	int indexMagazin = hashMagazine.getValue(storeId).second;
+	return magazine[indexMagazin].topKdiscounts(K);
+}
+
+Array<int> Service::mostCrowdedKDays(int K, int storeId) {
+	int indexMagazin = hashMagazine.getValue(storeId).second;
+	return magazine[indexMagazin].topKdays(K);
+}
+
+Array<double> Service::biggestKClientDistances(int K, int storeId) {
+	int indexMagazin = hashMagazine.getValue(storeId).second;
+	return magazine[indexMagazin].topKdistances(K);
 }
 
 void Service::createUser(int id, double homeX, double homeY) {

@@ -157,7 +157,7 @@ public:
 		return result;
 	}
 
-	int getIntervalData(int key1, int key2){
+	T getIntervalData(int key1, int key2){
 		if (key1 > key2) swap(key1, key2);
 
 		AVLnode<T> *left = searchKey(key1);
@@ -172,7 +172,7 @@ public:
 			return lca->sumData - right->getRightData() - left->getLeftData();
 		}
 
-		int result = lca->sumData;
+		T result = lca->sumData;
 		AVLnode<T> *current = lca;
 		// scadem ce nu ne trebuie pe drumul de la lca la left
 		while(current != left){

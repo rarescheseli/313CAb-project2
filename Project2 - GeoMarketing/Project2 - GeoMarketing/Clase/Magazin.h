@@ -37,9 +37,14 @@ public:
 	Array < int > topKdays(int K);
 	Array < int > topKdiscounts(int K);
 	Array < double > topKdistances(int K);
+	int visitsInTimeframe(int start, int final);
 	void visit(int timestamp, User client, int discount);
 	void quickSort(int pinitial, int pfinal);
 };
+
+int Magazin::visitsInTimeframe(int start, int final) {
+	return root->getIntervalSons(start, final);
+}
 
 Array <int> Magazin::topKdays(int K) {
 	Array < int > result;
