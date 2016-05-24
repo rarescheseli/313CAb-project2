@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../Utils/MinMax.h"
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
 
 class DisjointSet {
 private:

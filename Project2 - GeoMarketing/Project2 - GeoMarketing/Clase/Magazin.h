@@ -4,7 +4,10 @@
 #include "../SD/Array.h"
 #include "../SD/heap.h"
 #include "User.h"
-#include "../Utils/MinMax.h"
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
 
 struct zi {
 	int nrZi;
