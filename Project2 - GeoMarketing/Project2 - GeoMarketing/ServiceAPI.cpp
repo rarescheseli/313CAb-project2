@@ -132,14 +132,14 @@ int Service::visitsInTimeframe(int startTime, int endTime) {
 	int result = 0;
 	int limit = magazine.size() - 1;
 	for (int i = 1; i < limit; ++i) {
-		result += magazine[i].visitsInTimeFrame(startTime, endTime);
+		result += magazine[i].visitsInTimeframe(startTime, endTime);
 	}
 
 	return result;
 }
 
 int Service::totalDiscountInTimeframe(int startTime, int endTime) {
-	return (int)discountAVL.getIntervalData(startTime, endTime);
+	return (int)discountAVL->getIntervalData(startTime, endTime);
 }
 
 int Service::visitsInTimeframeOfStore(int startTime, int endTime, int storeId) {
@@ -210,7 +210,7 @@ void Service::visit(int timestamp, int clientId, int storeId, int discount) {
 	if (discount != -1) {
 		if (firstDiscount == false) {
 			firstDiscount = true;
-			discountAVL = new AVLnode<int>(timestamp, discount);
+			discountAVL = new AVLnode<long long>(timestamp, discount);
 		}
 		else {
 			discountAVL->insert(timestamp, discount);
