@@ -30,24 +30,51 @@ public:
 
 };
 
-/*de reparat!! nu returneaza ce trebuie.
-TODO: heap de pair < visits, ID >
-*/
+struct visit {
+	int ID;
+	int numberOfVisits;
+
+	bool operator > (const visit &t) const
+    {
+        if (t.numberOfVisits > numberOfVisits)
+            return true;
+        if (t.numberOfVisits < numberOfVisits)
+        	return false;
+        if (t.ID < numberOfVisits)
+        	return true;
+        return false;
+    }
+};
+
 Array <int> DisjointSet::topKGroups(int K) {
-	Array <int> dimensions = setsDimensions();
-	Array <int> result;
+	Array <int> groupsIDs;
 
-	dimensions.quickSort(0, dimensions.size()-1);
+	Heap <visit> H;
 
-	int length = dimensions.size();
-	int firstPos = max(0, length-K);
-	for (int i = length-1; i >= firstPos; --i) {
+	for (int i = 0; i < sets.size(); ++i) {
 		if (setSize[sets[i]] > 1) {
-			result.push_back(dimensions[i]);
+			visit v;
+			v.ID = setID[sets[i]];
+			v.numberOfVisits = setVisits[sets[i]];
+			H.insert(v);
 		}
 	}
 
-	return result;
+	int out = 0;
+
+	while (H.size() > 1) {
+		if (out == K) {
+			break;
+		}
+		visit v = H.peek();
+		groupsIDs.push_back(v.numberOfVisits);
+
+		out++;
+
+		H.extract();
+	}
+
+	return groupsIDs;
 }
 
 Array < pair<int, double> > DisjointSet::setsAverage() {
@@ -92,13 +119,13 @@ void DisjointSet::print2() {
 	Array <int> res = topKGroups(5);
 
 	for (int i = 0; i < res.size(); ++i) {
-		cout << res[i] << '\n';
+		cout << res[i] << " ";
 	}
 }
 
 void DisjointSet::print1() {
 	for (int i = 0; i < sets.size(); ++i) {
-		cout << sets[i] << " " << setSize[sets[i]] << " " << setID[sets[i]] << '\n';
+		cout << sets[i] << " " << setSize[sets[i]] << " " << setVisits[sets[i]]  << " " << setID[sets[i]] << '\n';
 	}
 }
 
