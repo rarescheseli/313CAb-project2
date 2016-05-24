@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "./SD/Array.h"
 #include "./SD/hash.h"
 #include "./Clase/User.h"
@@ -45,10 +46,24 @@ private:
 	//Pentru ultimul Task
 	NewMag *newMag;
 
+	int crtSize;
+	bool viz[MAX_CAPACITY];
+	void dfs(int nod) {
+		viz[nod] = 1;
+		for (int i = 0; i < ClientsGraph[nod].size(); ++i) {
+			if (!viz[ClientsGraph[nod][i]]) {
+				dfs(ClientsGraph[nod][i]);
+			}
+		}
+
+		++crtSize;
+	}
+
 	int minTimestamp;
 	int maxTimestamp;
 	int idUserMostInv;
 	bool firstDiscount;
+	int *gradInterior;
 	int longestChainSize;
 	Heap <User> ratioHeap;
 	Array <int> longestChain;
@@ -116,6 +131,7 @@ Service::Service() {
 	User aux;
 	Magazin aux2;
 	users.push_back(aux);
+	gradInterior = new int[MAX_CLIENTS]();
 
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
@@ -132,6 +148,7 @@ Service::Service() {
 
 Service::~Service() {
 	delete discountAVL;
+	delete[] gradInterior;
 	delete[] ClientsGraph;
 }
 
@@ -188,6 +205,7 @@ void Service::invite(int userWhichInvites, int invitedUser) {
 	int nodeWhichInvites = hashClienti.getValue(userWhichInvites).second;
 	int invitedNode = hashClienti.getValue(invitedUser).second;
 
+	gradInterior[invitedNode] = 1;
 	ClientsGraph[nodeWhichInvites].push_back(invitedNode);
 
 	if (ClientsGraph[nodeWhichInvites].size() > ClientsGraph[idUserMostInv].size()) {
@@ -243,13 +261,26 @@ Array <int> Service::usersWithBestBuyToDiscountRate(int K) {
 }
 
 int Service::userWithMostInvites() {
-	if (idUserMostInv == 0) {
+	if (users.size() <= 1) {
 		return -1;
 	}
 	return idUserMostInv;
 }
 
 int Service::longestInvitesChainSize() {
+	crtSize = 0;
+	memset(viz, 0, sizeof(viz));
+
+	for (int i = 1; i < users.size(); ++i) {
+		if (gradInterior[i] == 0 && !viz[i]) {
+			dfs(i);
+		}
+	}
+
+	if (crtSize - 1> longestChainSize) {
+		longestChainSize = crtSize - 1;
+	}
+
 	return longestChainSize;
 }
 
