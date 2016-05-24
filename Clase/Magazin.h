@@ -84,9 +84,9 @@ void Magazin::visit(int timestamp, User client, int discount) {
 	++zile[zi].nrVizite;
 	if (firstVisit == false) {
 		firstVisit = true;
-		root = new AVLnode <int>(timestamp);
+		root = new AVLnode <int>(timestamp, 0);
 	} else {
-		root->insert(timestamp);
+		root->insert(timestamp, 0);
 	}
 
 	double distance = sqrt( (client.getX() - storeX) * (client.getX() - storeX)
@@ -134,7 +134,7 @@ Magazin::Magazin(const Magazin &other) {
 	this->distante = other.distante;
 	this->discount = other.discount;
 	this->heapCapacity = other.heapCapacity;
-	// this->root = other->root;
+	this->root = other->root;
 
 	for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = other.zile[i].nrVizite;

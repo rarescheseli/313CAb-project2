@@ -118,7 +118,9 @@ Service::Service() {
 }
 
 Service::~Service() {
-    delete discountAVL;
+    if (discountAVL != NULL) {
+        delete discountAVL;
+    }
     delete[] ClientsGraph;
 }
 
@@ -170,9 +172,9 @@ void Service::visit(int timestamp, int clientId, int storeId, int discount) {
     if (discount != -1) {
         if (firstDiscount == false) {
             firstDiscount = true;
-            // de adaugat datele in AVL-ul de discounturi
+            discountAVL = new AVLnode <int>(timestamp, discount);
         } else {
-            // de adaugat datele in AVL-ul de discounturi
+            discountAVL->insert(timestamp, discount);
         }
     }
 }
