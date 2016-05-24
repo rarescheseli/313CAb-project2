@@ -138,7 +138,7 @@ Service::~Service() {
 int Service::visitsInTimeframe(int startTime, int endTime) {
 	int result = 0;
 	int limit = magazine.size() - 1;
-	for (int i = 1; i < limit; ++i) {
+	for (int i = 1; i <= limit; ++i) {
 		result += magazine[i].visitsInTimeframe(startTime, endTime);
 	}
 
