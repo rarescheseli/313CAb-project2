@@ -30,6 +30,9 @@ public:
 
 };
 
+/*de reparat!! nu returneaza ce trebuie.
+TODO: heap de pair < visits, ID >
+*/
 Array <int> DisjointSet::topKGroups(int K) {
 	Array <int> dimensions = setsDimensions();
 	Array <int> result;
@@ -39,7 +42,9 @@ Array <int> DisjointSet::topKGroups(int K) {
 	int length = dimensions.size();
 	int firstPos = max(0, length-K);
 	for (int i = length-1; i >= firstPos; --i) {
-		result.push_back(dimensions[i]);
+		if (setSize[sets[i]] > 1) {
+			result.push_back(dimensions[i]);
+		}
 	}
 
 	return result;
@@ -49,8 +54,10 @@ Array < pair<int, double> > DisjointSet::setsAverage() {
 	Array < pair<int, double> > result;
 
 	for (int i = 0; i < sets.size(); ++i) {
-		result.push_back(make_pair(setID[sets[i]],
-			double(setVisits[sets[i]]) / setSize[sets[i]]));
+		if (setSize[sets[i]] > 1) {
+			result.push_back(make_pair(setID[sets[i]],
+				double(setVisits[sets[i]]) / setSize[sets[i]]));
+		}
 	}
 
 	return result;
@@ -65,7 +72,9 @@ Array <int> DisjointSet::setsDimensions() {
 	Array <int> result;
 
 	for (int i = 0; i < sets.size(); ++i) {
-		result.push_back(setSize[sets[i]]);
+		if (setSize[sets[i]] > 1) {
+			result.push_back(setSize[sets[i]]);
+		}
 	}
 
 	return result;
