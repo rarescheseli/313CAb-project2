@@ -45,6 +45,8 @@ private:
 	//Pentru ultimul Task
 	NewMag *newMag;
 
+	int minTimestamp;
+	int maxTimestamp;
 	int idUserMostInv;
 	bool firstDiscount;
 	int longestChainSize;
@@ -114,6 +116,11 @@ Service::Service() {
 	User aux;
 	Magazin aux2;
 	users.push_back(aux);
+
+	maxTimestamp = -1;
+	minTimestamp = 2147483647;
+
+
 	firstDiscount = false;
 	magazine.push_back(aux2);
 	ClientsGraph = new Array <int>[MAX_CLIENTS];
@@ -139,7 +146,9 @@ int Service::visitsInTimeframe(int startTime, int endTime) {
 }
 
 int Service::totalDiscountInTimeframe(int startTime, int endTime) {
-	return (int)discountAVL->getIntervalData(startTime, endTime);
+	int final = min(maxTimestamp, endTime);
+	int start = max(minTimestamp, startTime);
+	return (int)discountAVL->getIntervalData(start, final);
 }
 
 int Service::visitsInTimeframeOfStore(int startTime, int endTime, int storeId) {
@@ -203,6 +212,9 @@ void Service::invite(int userWhichInvites, int invitedUser) {
 void Service::visit(int timestamp, int clientId, int storeId, int discount) {
 	int node = hashClienti.getValue(clientId).second;
 	disjointSet.addVisit(node);
+
+	minTimestamp = min(timestamp, minTimestamp);
+	maxTimestamp = max(timestamp, maxTimestamp);
 
 	int mag = hashMagazine.getValue(storeId).second;
 	magazine[mag].visit(timestamp, users[node], discount);

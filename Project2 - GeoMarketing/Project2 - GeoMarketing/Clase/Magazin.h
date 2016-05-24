@@ -18,6 +18,8 @@ class Magazin {
 	int heapCapacity;
 	AVLnode <int> *root;
 	struct zi *zile, *aux;
+	int minTimestamp;
+	int maxTimestamp;
 
 	Heap <int> discount;
 	Heap <double> distante;
@@ -28,6 +30,8 @@ public:
 	Magazin(const Magazin &other);
 	~Magazin();
 
+	int getMinTime();
+	int getMaxTime();
 	int getId() const;
 	double getX() const;
 	double getY() const;
@@ -42,8 +46,18 @@ public:
 	void quickSort(int pinitial, int pfinal);
 };
 
+int Magazin::getMinTime() {
+	return minTimestamp;
+}
+
+int Magazin::getMaxTime() {
+	return maxTimestamp;
+}
+
 int Magazin::visitsInTimeframe(int start, int final) {
-	return root->getIntervalSons(start, final);
+	int st = max(minTimestamp, start);
+	int dr = min(maxTimestamp, final);
+	return root->getIntervalSons(st, dr);
 }
 
 Array <int> Magazin::topKdays(int K) {
@@ -115,6 +129,9 @@ Magazin::Magazin() {
 	this->storeId = 0;
 	firstVisit = false;
 
+	maxTimestamp = -1;
+	minTimestamp = 2147483647;
+
 	aux = new zi[366];
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
@@ -130,6 +147,9 @@ Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
 	firstVisit = false;
 	this->heapCapacity = heapCapacity;
 
+	maxTimestamp = -1;
+	minTimestamp = 2147483647;
+
 	aux = new zi[366];
 	this->zile = new zi[366];
 	for (int i = 1; i <= 365; i++) {
@@ -142,6 +162,8 @@ Magazin::Magazin(const Magazin &other) {
 	this->storeId = other.getId();
 	this->storeX = other.getX();
 	this->storeY = other.getY();
+	this->minTimestamp = other.minTimestamp;
+	this->maxTimestamp = other.maxTimestamp;
 	this->distante = other.distante;
 	this->discount = other.discount;
 	this->heapCapacity = other.heapCapacity;
