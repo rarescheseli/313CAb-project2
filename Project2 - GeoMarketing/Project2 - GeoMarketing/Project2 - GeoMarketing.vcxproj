@@ -75,6 +75,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -110,7 +113,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ServiceAPI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Clase\Magazin.h" />
+    <ClInclude Include="Clase\User.h" />
+    <ClInclude Include="SD\Array.h" />
+    <ClInclude Include="SD\AVL.h" />
+    <ClInclude Include="SD\disjointset.h" />
+    <ClInclude Include="SD\hash.h" />
+    <ClInclude Include="SD\heap.h" />
+    <ClInclude Include="Utils\MinMax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
