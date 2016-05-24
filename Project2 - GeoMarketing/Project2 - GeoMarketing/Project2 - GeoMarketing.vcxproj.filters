@@ -47,5 +47,8 @@
     <ClInclude Include="SD\AVL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Taskuri\NewMag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

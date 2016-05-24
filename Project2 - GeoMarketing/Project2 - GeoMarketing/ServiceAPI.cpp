@@ -7,6 +7,7 @@
 #include "./Clase/User.h"
 #include "./SD/disjointset.h"
 #include "./SD/AVL.h"
+#include "Taskuri/NewMag.h"
 
 using namespace std;
 
@@ -40,6 +41,9 @@ private:
 
 	//paduri
 	DisjointSet disjointSet;
+
+	//Pentru ultimul Task
+	NewMag *newMag;
 
 	int idUserMostInv;
 	bool firstDiscount;
@@ -213,4 +217,10 @@ Array<int> Service::topKGroupsWithMostVisitsOverall(int K) {
 
 Array< pair<int, double> > Service::averageVisitsPerUser() {
 	return disjointSet.setsAverage();
+}
+
+pair<double, double> Service::newStoreCoordinates() {
+	Point p;
+	newMag = new NewMag(users, magazine, magazine.size() - 1);
+	return make_pair(p.x, p.y);
 }

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../SD//AVL.h"
+#include "../SD/Array.h"
+#include "../SD/heap.h"
+#include "User.h"
 
 struct zi {
 	int nrZi;
