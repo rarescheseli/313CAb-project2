@@ -4,6 +4,7 @@
 #include "../SD/Array.h"
 #include "../SD/heap.h"
 #include "User.h"
+#include "../Utils/MinMax.h"
 
 struct zi {
 	int nrZi;

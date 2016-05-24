@@ -1,3 +1,4 @@
 ﻿  ServiceAPI.cpp
+Main.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'Main.obj' or at 'C:\Users\fll0pY\Source\Repos\313CAb-project2\Project2 - GeoMarketing\Debug\vc140.pdb'; linking object as if no debug info
   Project2 - GeoMarketing.vcxproj -> C:\Users\fll0pY\Source\Repos\313CAb-project2\Project2 - GeoMarketing\Debug\Project2 - GeoMarketing.exe
   Project2 - GeoMarketing.vcxproj -> C:\Users\fll0pY\Source\Repos\313CAb-project2\Project2 - GeoMarketing\Debug\Project2 - GeoMarketing.pdb (Partial PDB)
