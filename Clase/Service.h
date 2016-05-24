@@ -18,6 +18,7 @@ using namespace std;
 // };
 
 #define MAX_CAPACITY 300005
+#define MAX_CLIENTS 200002
 
 class Service {
 private:
@@ -43,9 +44,13 @@ private:
     int longestChainSize;
     Heap <User> ratioHeap;
     Array <int> longestChain;
+
+    // graf orientat in care pun invitatiile
+    Array <int> *ClientsGraph;
 public:
 
     Service();
+    ~Service();
 
     void createUser(int id, double homeX, double homeY);
 
@@ -105,10 +110,16 @@ Service::Service() {
     users.push_back(aux);
     firstDiscount = false;
     magazine.push_back(aux2);
+    ClientsGraph = new Array <int>[MAX_CLIENTS];
 
     idUserMostInv = 0;
     longestChainSize = 0;
     longestChain.push_back(0);
+}
+
+Service::~Service() {
+    delete discountAVL;
+    delete[] ClientsGraph;
 }
 
 void Service::createUser(int id, double homeX, double homeY) {
@@ -125,10 +136,10 @@ void Service::createStore(int id, double storeX, double storeY) {
 }
 
 void Service::invite (int userWhichInvites, int invitedUser) {
-	ClientsGraph[userWhichInvites].push_back(invitedUser)
-
     int nodeWhichInvites = hashClienti.getValue(userWhichInvites).second
     int invitedNode = hashClienti.getValue(invitedUser).second;
+
+    ClientsGraph[nodeWhichInvites].push_back(invitedNode);
 
 	if ( ClientsGraph[nodeWhichInvites].size() > ClientsGraph[idUserMostInv].size() ){
 		idUserMostInv = nodeWhichInvites;
