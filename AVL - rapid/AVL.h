@@ -7,7 +7,7 @@ template <typename T>
 class AVLnode
 {
 	T data, sumData;//, sumData;
-	int sons;
+	int sons, key;
 	AVLnode<T> *leftNode;
 	AVLnode<T> *rightNode;
 	unsigned int h; //height
@@ -19,8 +19,9 @@ public:
         sons = 0;
 	}
 
-	AVLnode(T data) {
+	AVLnode(int key, T data) {
 		this->data = data;
+		this->key = key;
 		h = 1;
 		leftNode = rightNode = NULL;
 		sons = 0;
@@ -43,7 +44,25 @@ public:
         return data;
     }
 
-    T setData(T newData){
+    T getLeftData(){
+    	if (leftNode)
+    		return leftNode->sumData;
+    	else
+    		return 0;
+    }
+
+    T getRightData(){
+    	if (rightNode)
+    		return rightNode->sumData;
+    	else
+    		return 0;
+    }
+
+    int getKey(){
+    	return key;
+    }
+
+    void setData(T newData){
         data = newData;
     }
 
@@ -61,9 +80,9 @@ public:
 
         if (node1 == current || node2 == current)
             return current;
-        if (node1 -> data <= current -> data && node2 -> data <= current -> data)
+        if (node1 -> key <= current -> key && node2 -> key <= current -> key)
             return current -> leftNode -> LCA(node1, node2);
-        if (node1 -> data > current -> data && node2 -> data > current -> data)
+        if (node1 -> key > current -> key && node2 -> key > current -> key)
             return current -> rightNode -> LCA(node1, node2);
         return current;
 	}
@@ -87,13 +106,95 @@ public:
 	}
 
 	int getLeftSons(){
-        if (this) return this->leftNode->getSons();
+        if (this) return this->leftNode->getSons() + 1;
             else return 0;
 	}
 
 	int getRightSons(){
-        if (this) return this->rightNode->getSons();
+        if (this) return this->rightNode->getSons() + 1;
             else return 0;
+	}
+
+	int getIntervalSons(int key1, int key2){
+		if (key1 > key2) swap(key1, key2);
+
+		AVLnode *left = searchKey(key1);
+		AVLnode *right = searchKey(key2);
+		AVLnode *lca = LCA(left, right);
+
+		if (lca == left){
+			return 1 + left->getRightSons() - right->getRightSons();
+		}
+
+		if (lca == right){
+			return 1 + right->getLeftSons() - left->getLeftSons();
+		}
+
+		int result = lca->sons;
+		AVLnode *current = lca;
+		// scadem ce nu ne trebuie pe drumul de la lca la left
+		while(current != left){
+			if (current->key <= left->key ){
+				result -= current->getLeftSons() + 1;
+				current = current->rightNode;
+			}
+			else current = current->leftNode;
+		}
+		result -= current->getLeftSons();
+
+		current = lca;
+		// scadem ce nu ne trebuie pe drumul de la lca la right
+		while(current != right){
+			if (current->key >= right->key ){
+				result -= current->getRightSons() + 1;
+				current = current->leftNode;
+			}
+			else current = current->rightNode;
+		}
+		result -= current->getRightSons();
+
+		return result;
+	}
+
+	int getIntervalData(int key1, int key2){
+		if (key1 > key2) swap(key1, key2);
+
+		AVLnode *left = searchKey(key1);
+		AVLnode *right = searchKey(key2);
+		AVLnode *lca = LCA(left, right);
+
+		if (lca == left){
+			return lca->sumData - left->getLeftData() - right->getRightData();
+		}
+
+		if (lca == right){
+			return lca->sumData - right->getRightData() - left->getLeftData();
+		}
+
+		int result = lca->sumData;
+		AVLnode *current = lca;
+		// scadem ce nu ne trebuie pe drumul de la lca la left
+		while(current != left){
+			if (current->key <= left->key ){
+				result -= current->getLeftData();
+				current = current->rightNode;
+			}
+			else current = current->leftNode;
+		}
+		result -= current->getLeftData();
+
+		current = lca;
+		// scadem ce nu ne trebuie pe drumul de la lca la right
+		while(current != right){
+			if (current->key >= right->key ){
+				result -= current->getRightData();
+				current = current->leftNode;
+			}
+			else current = current->rightNode;
+		}
+		result -= current->getRightData();
+
+		return result;
 	}
 
 	AVLnode* rotateLeft(){
@@ -196,17 +297,18 @@ public:
 	}
 
 
-	 // insert data key in a tree with "current" root
-	AVLnode* insert(T data){
+	 // insert key and data in a tree with "current" root
+	 // AVL is sorted by key
+	AVLnode* insert(int key, T data){
 		// cand e radacina sau s-a ajuns la frunza unde trebuie adaugat
 		AVLnode *current = this;
 	    if( !current )
-	    	return new AVLnode(data);
+	    	return new AVLnode(key, data);
 
-	    if( data < current->data )
-	        current->leftNode = current->leftNode->insert(data);
+	    if( key < current->key )
+	        current->leftNode = current->leftNode->insert(key, data);
 	    else
-	        current->rightNode = current->rightNode->insert(data);
+	        current->rightNode = current->rightNode->insert(key, data);
 
         sumData += data;
         sons++;
@@ -214,9 +316,9 @@ public:
 	    return current->balance();
 	}
 
-    AVLnode<T>* searchKey(T x){
-        if (this && this->data != x){
-            if (this->data > x)
+    AVLnode<T>* searchKey(int x){
+        if (this && this->key != x){
+            if (this->key > x)
                 return this->leftNode->searchKey(x);
             return this->rightNode->searchKey(x);
         }
@@ -228,7 +330,7 @@ public:
 	{
 		if (node != NULL) {
 			InOrderDisplay(node->leftNode);
-			cout << node->data << " ";
+			cout << node->key << " ";
 			InOrderDisplay(node->rightNode);
 		}
 	}
@@ -247,7 +349,7 @@ public:
 
 			if (c) {
 				nrNoduri++;
-				cout << (c->data) << ' ';
+				cout << (c->key) << ' ';
 				if (nrNoduri == nrNivel) {
 					nrNivel <<= 1;
 					nrNoduri = 0;
