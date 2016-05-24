@@ -326,7 +326,7 @@ public:
 
         return this;
     }
-
+/*
 	void InOrderDisplay(AVLnode<T> *node)
 	{
 		if (node != NULL) {
@@ -335,9 +335,9 @@ public:
 			InOrderDisplay(node->rightNode);
 		}
 	}
-
+*/
 //debug
-	void bfs(AVLnode<T> *nod) {
+/*	void bfs(AVLnode<T> *nod) {
 		AVLnode<T> *c;
 
 		queue <AVLnode<T>*> q;
@@ -361,6 +361,6 @@ public:
 			}
 		}
 		cout << "\n";
-	}
+	}*/
 
 };
