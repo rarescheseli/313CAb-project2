@@ -113,6 +113,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ServiceAPI.cpp" />
   </ItemGroup>
   <ItemGroup>

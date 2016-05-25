@@ -47,7 +47,7 @@ struct Array {
     void resize(int newSize);
 
     // Metoda care adauga un element nou
-    void push_back(const T something);
+    void push_back(const T& something);
 
     // Metoda pentru stergerea ultimului element adaugat
     void pop_back();
@@ -63,6 +63,7 @@ Array <T> :: Array() {
     _capacity = 1;
     resultSize = 0;
     resultData = new T[1];
+    resultData[0] = T();
 }
 
 template <typename T>
@@ -100,7 +101,7 @@ void Array<T>::resize(int newSize) {
 }
 
 template <typename T>
-void Array<T>::push_back(const T something) {
+void Array<T>::push_back(const T& something) {
     // Verifica daca vectorul e plin
     if (resultSize == _capacity) {
         resize(_capacity << 1);

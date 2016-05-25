@@ -30,11 +30,11 @@ public:
 	}
 
 	~AVLnode() {
-       /* if (leftNode)
+        if (leftNode)
             delete leftNode;
 
         if (rightNode)
-            delete rightNode;*/
+            delete rightNode;
 	}
 
     T getSumData() {
@@ -326,16 +326,17 @@ public:
 
         return this;
     }
-/*
+
 	void InOrderDisplay(AVLnode<T> *node)
 	{
 		if (node != NULL) {
+			// cout <<"asd " << node->key << ' ' << node-> data<< '\n';
 			InOrderDisplay(node->leftNode);
 			cout << node->key << " ";
 			InOrderDisplay(node->rightNode);
 		}
 	}
-*/
+
 //debug
 /*	void bfs(AVLnode<T> *nod) {
 		AVLnode<T> *c;

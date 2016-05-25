@@ -7,6 +7,8 @@
 #include <iostream>
 #include <algorithm>
 
+#define MAX_AIB2 10005
+
 using namespace std;
 
 struct zi {
@@ -15,12 +17,11 @@ struct zi {
 };
 
 class Magazin {
+	int *aib;
 	bool firstVisit;
 	int storeId;
 	double storeX;
 	double storeY;
-	int heapCapacity;
-	AVLnode <int> *root;
 	struct zi zile[366], aux[366];
 	int minTimestamp;
 	int maxTimestamp;
@@ -28,14 +29,29 @@ class Magazin {
 	Heap <int> discount;
 	Heap <double> distante;
 
+	void updateVizite(int pos) {
+		while (pos <= MAX_AIB2) {
+			++aib[pos];
+			pos += -pos & pos;
+		}
+	}
+
+	int queryVizite(int pos) {
+		int res = 0;
+		while (pos) {
+			res += aib[pos];
+			pos -= -pos & pos;
+		}
+
+		return res;
+	}
+
 public:
 	Magazin();
-	Magazin(int storeId, double storeX, double storeY, int heapCapacity);
+	Magazin(int storeId, double storeX, double storeY);
 	Magazin(const Magazin &other);
 	~Magazin();
 
-	int getMinTime();
-	int getMaxTime();
 	int getId() const;
 	double getX() const;
 	double getY() const;
@@ -50,18 +66,17 @@ public:
 	void quickSort(int pinitial, int pfinal);
 };
 
-int Magazin::getMinTime() {
-	return minTimestamp;
-}
-
-int Magazin::getMaxTime() {
-	return maxTimestamp;
-}
-
 int Magazin::visitsInTimeframe(int start, int final) {
+	++start; ++final;
+	if (firstVisit == false || start > maxTimestamp || final < minTimestamp) {
+		return 0;
+	}
+
 	int st = max(minTimestamp, start);
 	int dr = min(maxTimestamp, final);
-	return root->getIntervalSons(st, dr);
+
+	return queryVizite(dr) - queryVizite(st - 1);
+	return 0;
 }
 
 Array <int> Magazin::topKdays(int K) {
@@ -73,7 +88,7 @@ Array <int> Magazin::topKdays(int K) {
 
 	for (int i = 365; i > 0 && K > 0; --i) {
 		if (zile[i].nrVizite > 0) {
-			result.push_back(zile[i].nrZi);
+			result.push_back(zile[i].nrZi - 1);
 			--K;
 		}
 	}
@@ -83,7 +98,10 @@ Array <int> Magazin::topKdays(int K) {
 
 Array <int> Magazin::topKdiscounts(int K) {
 	Array <int> result;
-	Heap < int > aux(discount);
+	if (discount.size() <= 1) {
+		return result;
+	}
+	Heap < int > aux=discount;
 	while (K > 0 && aux.size() > 1) {
 		result.push_back(aux.extract());
 		--K;
@@ -94,7 +112,10 @@ Array <int> Magazin::topKdiscounts(int K) {
 
 Array <double> Magazin::topKdistances(int K) {
 	Array < double > result;
-	Heap < double > aux(distante);
+	if (distante.size() <= 1) {
+		return result;
+	}
+	Heap < double > aux=distante;
 	while (K > 0 && aux.size() > 1) {
 		result.push_back(aux.extract());
 		--K;
@@ -112,12 +133,11 @@ void Magazin::visit(int timestamp, User client, int discount) {
 	++zile[zi].nrVizite;
 	if (firstVisit == false) {
 		firstVisit = true;
-		root = new AVLnode <int>(timestamp, 0);
-	}
-	else {
-		root->insert(timestamp, 0);
 	}
 
+	updateVizite(timestamp);
+	minTimestamp = min(minTimestamp, timestamp);
+	maxTimestamp = max(maxTimestamp, timestamp);
 	double distance = sqrt((client.getX() - storeX) * (client.getX() - storeX)
 		+ (client.getY() - storeY) * (client.getY() - storeY));
 	distante.insert(distance);
@@ -132,24 +152,24 @@ Magazin::Magazin() {
 	this->storeY = 0;
 	this->storeId = 0;
 	firstVisit = false;
+	aib = new int[MAX_AIB2]();
 
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
-	root = NULL;
 
-	/*for (int i = 1; i <= 365; i++) {
+	for (int i = 1; i <= 365; i++) {
 		this->zile[i].nrVizite = 0;
 		this->zile[i].nrZi = i;
-	}*/
+	}
 }
 
-Magazin::Magazin(int storeId, double storeX, double storeY, int heapCapacity) {
+Magazin::Magazin(int storeId, double storeX, double storeY) {
 	this->storeId = storeId;
 	this->storeX = storeX;
 	this->storeY = storeY;
 	firstVisit = false;
-	this->heapCapacity = heapCapacity;
-	root = NULL;
+	aib = new int[MAX_AIB2]();
+
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
 
@@ -167,20 +187,19 @@ Magazin::Magazin(const Magazin &other) {
 	this->maxTimestamp = other.maxTimestamp;
 	this->distante = other.distante;
 	this->discount = other.discount;
-	this->heapCapacity = other.heapCapacity;
-	this->root = other.root;
 
-	//for (int i = 1; i <= 365; i++) {
-	//	this->zile[i].nrVizite = other.zile[i].nrVizite;
-	//	this->zile[i].nrZi = other.zile[i].nrZi;
-	//}
+	for (int i = 1; i <= 365; i++) {
+		this->zile[i].nrVizite = other.zile[i].nrVizite;
+		this->zile[i].nrZi = other.zile[i].nrZi;
+	}
+
+	for (int i = 0; i < MAX_AIB2; ++i) {
+		this->aib[i] = other.aib[i];
+	}
 }
 
 Magazin::~Magazin() {
-	/*if (root != NULL) {
-		delete root;
-	}
-*/
+	//delete[] aib;
 }
 
 void Magazin::quickSort(int pinitial, int pfinal) {

@@ -107,12 +107,35 @@ public:
 		capacity = other.capacity;
 		dimension = other.dimension;
 
-		position = new int[capacity];
 		if (dimension > 0) {
+			position = new int[capacity];
 			for (int i = 0; i < other.dimension; ++i) {
 				position[i] = other.position[i];
 			}
 		}
+	}
+
+	Heap &operator=(const Heap &other) {
+		if (this != &other) {
+			H = other.H;
+			cmp = other.cmp;
+			index = other.index;
+			capacity = other.capacity;
+
+			dimension = other.dimension;
+
+			if (dimension > 0) {
+				int *tmp = new int[other.capacity];
+				for (int i = 0; i < other.dimension; ++i) {
+					tmp[i] = other.position[i];
+				}
+
+				delete[] position;
+				position = tmp;
+			}
+		}
+
+		return *this;
 	}
 
 	T peek() {
@@ -152,8 +175,6 @@ public:
 		}
 
 		position[++index] = ++dimension;
-		// Pair <T, int> aux;
-		// aux.makePair(x, index);
 		H.push_back(make_pair(x, index));
 		pushUp(dimension);
 	}

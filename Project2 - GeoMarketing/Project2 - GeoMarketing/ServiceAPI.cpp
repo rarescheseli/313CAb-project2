@@ -22,17 +22,17 @@ using namespace std;
 // };
 
 #define MAX_CAPACITY 300005
-#define MAX_CLIENTS 200
+#define MAX_CLIENTS 200002
 
 class Service {
 private:
 	// bag userii in ordine cronologica
 	Array <User> users;
 
-	AVLnode <long long> *discountAVL;
+	AVLnode <long long> *discountAVL = NULL;
 
 	// bag magazinele in ordine cronologica
-	Array <Magazin> magazine;
+	//Array <Magazin> magazine;
 
 	// hash care ma duce din idUser -> al catelea a fost adaugat in ordine cronologica
 	Hash hashClienti;
@@ -129,17 +129,16 @@ public:
 
 Service::Service() {
 	User aux;
-	Magazin aux2;
-	aux2.visit(0, aux, 0);
+	//Magazin aux2;
 	users.push_back(aux);
 	gradInterior = new int[MAX_CLIENTS]();
 
 	maxTimestamp = -1;
 	minTimestamp = 2147483647;
 
-	discountAVL = NULL;
+
 	firstDiscount = false;
-	magazine.push_back(aux2);
+	//magazine.push_back(aux2);
 	ClientsGraph = new Array <int>[MAX_CLIENTS];
 
 	idUserMostInv = 0;
@@ -148,46 +147,65 @@ Service::Service() {
 }
 
 Service::~Service() {
-	if (discountAVL != NULL) 
-		delete discountAVL;
+	delete discountAVL;
 	delete[] gradInterior;
 	delete[] ClientsGraph;
 }
 
 int Service::visitsInTimeframe(int startTime, int endTime) {
+	// if (magazine.size() <= 1) {
+	// 	return 0;
+	// }
+
 	int result = 0;
-	int limit = magazine.size() - 1;
-	for (int i = 1; i <= limit; ++i) {
-		result += magazine[i].visitsInTimeframe(startTime, endTime);
-	}
+	// int limit = magazine.size() - 1;
+	// for (int i = 1; i <= limit; ++i) {
+	// 	result += magazine[i].visitsInTimeframe(startTime, endTime);
+	// }
 
 	return result;
 }
 
 int Service::totalDiscountInTimeframe(int startTime, int endTime) {
+	// if (magazine.size() <= 1) {
+	// 	return 0;
+	// }
+
+	return 0;
+
 	int final = min(maxTimestamp, endTime);
 	int start = max(minTimestamp, startTime);
 	return (int)discountAVL->getIntervalData(start, final);
 }
 
 int Service::visitsInTimeframeOfStore(int startTime, int endTime, int storeId) {
-	int indexMagazin = hashMagazine.getValue(storeId).second;
-	return magazine[indexMagazin].visitsInTimeframe(startTime, endTime);
+	// int indexMagazin = hashMagazine.getValue(storeId).second;
+	// return magazine[indexMagazin].visitsInTimeframe(startTime, endTime);
+	return 0;
 }
 
 Array<int> Service::biggestKDiscounts(int K, int storeId) {
-	int indexMagazin = hashMagazine.getValue(storeId).second;
-	return magazine[indexMagazin].topKdiscounts(K);
+	// int indexMagazin = hashMagazine.getValue(storeId).second;
+	// return magazine[indexMagazin].topKdiscounts(K);
+
+	Array <int> a;
+	return a;
 }
 
 Array<int> Service::mostCrowdedKDays(int K, int storeId) {
-	int indexMagazin = hashMagazine.getValue(storeId).second;
-	return magazine[indexMagazin].topKdays(K);
+	// int indexMagazin = hashMagazine.getValue(storeId).second;
+	// return magazine[indexMagazin].topKdays(K);
+
+	Array <int> a;
+	return a;	
 }
 
 Array<double> Service::biggestKClientDistances(int K, int storeId) {
-	int indexMagazin = hashMagazine.getValue(storeId).second;
-	return magazine[indexMagazin].topKdistances(K);
+	// int indexMagazin = hashMagazine.getValue(storeId).second;
+	// return magazine[indexMagazin].topKdistances(K);
+
+	Array <double> a;
+	return a;
 }
 
 void Service::createUser(int id, double homeX, double homeY) {
@@ -199,8 +217,8 @@ void Service::createUser(int id, double homeX, double homeY) {
 }
 
 void Service::createStore(int id, double storeX, double storeY) {
-	magazine.push_back(Magazin(id, storeX, storeY, MAX_CAPACITY));
-	hashMagazine.insert(id, magazine.size() - 1);
+	// magazine.push_back(Magazin(id, storeX, storeY, MAX_CAPACITY));
+	// hashMagazine.insert(id, magazine.size() - 1);
 }
 
 void Service::invite(int userWhichInvites, int invitedUser) {
@@ -236,8 +254,8 @@ void Service::visit(int timestamp, int clientId, int storeId, int discount) {
 	minTimestamp = min(timestamp, minTimestamp);
 	maxTimestamp = max(timestamp, maxTimestamp);
 
-	int mag = hashMagazine.getValue(storeId).second;
-	magazine[mag].visit(timestamp, users[node], discount);
+	// int mag = hashMagazine.getValue(storeId).second;
+	// magazine[mag].visit(timestamp, users[node], discount);
 
 	if (discount != -1) {
 		if (firstDiscount == false) {
@@ -302,11 +320,4 @@ pair<double, double> Service::newStoreCoordinates() {
 	Point p;
 	newMag = new NewMag(users, magazine, magazine.size() - 1);
 	return make_pair(p.x, p.y);
-}
-
-int main()
-{
-	Service s;
-	s.createUser(1, 25.96966, 44.44577);
-	return 0;
 }

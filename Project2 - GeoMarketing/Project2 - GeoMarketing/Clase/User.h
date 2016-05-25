@@ -44,7 +44,7 @@ class User {
 			return  discount;
 		}
 		float getRaport() {
-			return (float)nrCumparaturi/discount;
+			return (float)discount/nrCumparaturi;
 		}
 
 		void setId(int id) {
@@ -66,7 +66,7 @@ class User {
 
 		bool operator>(User& u)
 		{
-			if (this->getRaport() > u.getRaport())
+			if (this->getRaport() < u.getRaport())
 				return true;
 			return false;
 		}
